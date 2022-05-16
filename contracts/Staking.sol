@@ -45,6 +45,7 @@ contract Staking {
 
         dappCampWarriors.transferFrom(msg.sender, address(this), tokenId);
 
+        // solhint-disable-next-line not-rely-on-time
         staked[tokenId] = Stake(msg.sender, tokenId, block.timestamp);
     }
 
@@ -64,11 +65,6 @@ contract Staking {
             "Staking: cannot unstake an NFT in the same block it was staked"
         );
 
-        /**
-         * @notice Don't use this method to calculate rewards in production.
-         * Miners are able to manipulate the block timestamp, so don't rely on it.
-         * A possible alternative is using a timestamp oracle.
-         */
         uint256 stakedSeconds = block.timestamp - staked[tokenId].initTimestamp;
 
         delete staked[tokenId];
@@ -78,3 +74,4 @@ contract Staking {
         camp.mint(msg.sender, stakedSeconds * rewardPerSecondInWei);
     }
 }
+/* solhint-enable not-rely-on-time */

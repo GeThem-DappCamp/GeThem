@@ -8,7 +8,7 @@ struct Company{
     string company_name,    
 }
 Company[] companies;
-mapping(uint => uint[]) companyId_ jobIds;
+mapping(uint => uint[]) companyId_jobIds;
 
 struct Job{
     string designation,
@@ -29,7 +29,7 @@ mapping(uint => uint[]) jobId_candidateIds;
 struct Recruiter{
     string name,
     string email,
-    address recruiter_address
+    bool exists
 }
 Recruiter[] recruiters;
 mapping(address => uint) recruiterAddress_recruiterId;
@@ -37,28 +37,31 @@ mapping(uint => uint[]) recruiterId_openJobsIds;
 mapping(uint => uint) recruiterId_companyId; //assuming recruiter belongs to only 1 company
 
 
+struct Referrer{
+    string name,
+    string email,
+    string community_name,
+    uint reputation_score,
+    uint total_rewards_earned,
+    bool exists
+}
+Referrer[] referrers; //idx becomes referrerId
+mapping(address => uint) referrerAddress_referrerId;
+mapping(uint => uint[]) referrerId_candidateIds;
+
+
 struct Candidate{
     string name,
-    string current_company_name
+    string current_company_name,
+    bool exists
 }
 Candidate[] candidates; //idx becomes candidateId
 mapping(address => uint) candidateAddress_candidateId;
 mapping(uint => uint[]) candidateId_appliedJobIds;
 mapping(uint => uint[]) cadidateId_referrerIds;
 
-enum InterviewStatusEnum {applied, interview1, interview2, hired, rejected};
+enum InterviewStatusEnum {WAITING, ROUND1, ROUND2, ACCEPTED, REJECTED};
 mapping(uint => mapping(uint=> InterviewStatusEnum)) cadidateId_jobId_interviewStatus;
-
-struct Referrer{
-    string name,
-    string email,
-    string community_name,
-    uint reputation_score,
-    uint total_rewards_earned
-}
-Referrer[] referrers; //idx becomes referrerId
-mapping(address => uint) referrerAddress_referrerId;
-mapping(uint => uint[]) referrerId_candidateIds;
 
 
 

@@ -32,7 +32,7 @@ contract GeThem is Job, Recruiter {
     }
 
     function getJobsByRecruiterAddress(address recruiter_address)
-        public
+        public view
         returns (Job.JobStructure[] memory)
     {
         require(

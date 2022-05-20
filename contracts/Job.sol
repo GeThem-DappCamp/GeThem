@@ -29,7 +29,7 @@ contract Job {
         uint256[] candidatesIds;
         address recruiter_address;
     }
-    mapping(uint256 => mapping(uint256 => HiringStatus)) jobId_cadidateId_interviewStatus;
+
     mapping(uint256 => JobStructure) public jobs;
     uint256 public jobs_length = 0;
     mapping(address => uint256) public recruiterToJobCount;
@@ -39,6 +39,20 @@ contract Job {
         uint256 amount;
         uint256 initTimestamp;
     }
+
+    struct Application {
+        uint256 candidateId;
+        uint256 referrerId;
+        // uint256 recruiterId;
+        uint256 jobId;
+        HiringStatus hiringStatus;
+        string skillsets;
+    }
+    Application[] applications;
+    mapping(uint256 => uint256[]) referrerId_applicationIds;
+
+    // mapping(uint256 => mapping(uint256 => HiringStatus)) jobId_cadidateId_interviewStatus;
+    // mapping(uint256 => uint256[]) candidateAdress_applicationIds;
 
     function createJob(
         string memory company_name,
@@ -86,5 +100,18 @@ contract Job {
             }
         }
         return recruiter_jobs;
+    }
+
+    function getAllOpenJobs() public view returns (JobStructure[] memory) {
+        JobStructure[] memory allOpenJobs = new JobStructure[](jobs_length);
+        uint256 counter = 0;
+
+        for (uint256 i = 0; i < jobs_length; i++) {
+            if (jobs[i].status == JobStatus.OPEN) {
+                allOpenJobs[counter] = jobs[i];
+                counter++;
+            }
+        }
+        return allOpenJobs;
     }
 }

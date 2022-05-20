@@ -39,12 +39,16 @@ contract Referrer {
         referrerAddress_referrerId[msg.sender] = referrerId;
     }
 
-    //function getListOfAllOpenJobs() - just return entire jobs array
+    function isReferrer(address referrer_address) public view returns (bool) {
+        uint256 referrerId = referrerAddress_referrerId[referrer_address];
+        if (referrers[referrerId].exists) {
+            return true;
+        }
+        return false;
+    }
 
     function referCandidate() public {
         //create a candidate if not present
         //create an application based on job_id, candidate_id
     }
 }
-
-//add if referrer exists

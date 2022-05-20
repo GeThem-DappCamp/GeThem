@@ -4,6 +4,7 @@ pragma solidity ^0.8.4;
 contract Job {
     address public owner;
 
+
     enum HiringStatus {
         WAITING,
         ROUND1,
@@ -33,6 +34,7 @@ contract Job {
     mapping(uint256 => JobStructure) public jobs;
     uint256 public jobs_length = 0;
     mapping(address => uint256) public recruiterToJobCount;
+
 
     struct Stake {
         address account;
@@ -83,5 +85,6 @@ contract Job {
             }
         }
         return recruiter_jobs;
+
     }
 }

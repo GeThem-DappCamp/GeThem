@@ -53,7 +53,7 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
             Recruiter.isRecruiter(recruiter_address),
             "Error sender is not a recruiter"
         );
-        //return the entire list of referrers and sort at frontend as sorting consumes gas in solidity
+        //return the entire list of referrers and sort at frontend as sorting consumes gas
         return Referrer.referrers;
     }
 
@@ -69,6 +69,7 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         view
         returns (ReferralListStruct[] memory)
     {
+        //check if dynamic arr works if not add count
         ReferralListStruct[] memory referrals = new ReferralListStruct[](0);
 
         uint256 referrerId = Referrer.referrerAddress_referrerId[msg.sender];
@@ -85,10 +86,13 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
                     referrer_name: Referrer
                         .referrers[application.referrerId]
                         .name,
-                    referred_company: Job.jobs[application.jobId].company_name
+                    referred_company: Job.jobs[application.jobId].company_name,
+                    hiring_status: 
                 })
             );
         }
         return referrals;
     }
+
+    function getListReferrers() {}
 }

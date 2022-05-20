@@ -7,8 +7,8 @@ contract Candidate {
     struct CandidateStruct {
         string name;
         string email;
-        bool exists;
         string currentCompany;
+        bool exists;
     }
 
     mapping(address => uint256) public addressToCandidate;
@@ -24,7 +24,7 @@ contract Candidate {
         string memory email,
         string memory company
     ) public {
-        candidates.push(CandidateStruct(name, email, true, company));
+        candidates.push(CandidateStruct(name, email, company, true));
         uint256 candidateId = candidates.length - 1;
         addressToCandidate[msg.sender] = candidateId;
         // candidateCount++;

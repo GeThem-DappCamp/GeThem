@@ -12,7 +12,6 @@ contract Recruiter {
     mapping(address => RecruiterStruct) public recruiters;
     mapping(address => uint256[]) public recruiterAddress_openJobsIds;
 
-
     function createRecruiterAccount(
         address recruiter_address,
         string memory name,

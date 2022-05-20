@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -16,8 +15,7 @@ import addresses from "../../addresses.json";
 import campSolContract from "../../artifacts/contracts/Camp.sol/Camp.json";
 import nftSolContract from "../../artifacts/contracts/DappCampWarriors.sol/DappCampWarriors.json";
 import stakingSolContract from "../../artifacts/contracts/Staking.sol/Staking.json";
-
-import "../styles/globals.css";
+import "../styles/globals.scss";
 
 const campContractAddr = addresses[networkName].camp;
 const dappCampWarriorsContractAddr = addresses[networkName].dappCampWarriors;
@@ -35,6 +33,7 @@ function MyApp({ Component, pageProps }) {
 
   const load = async () => {
     const ethereum = getEthereumObject();
+
     if (!ethereum) {
       return;
     }
@@ -57,6 +56,7 @@ function MyApp({ Component, pageProps }) {
     if (!campContract || !dcWarriorsContract || !stakingContract) return;
 
     const currentAccount = await getCurrentAccount();
+
     setContracts({ campContract, dcWarriorsContract, stakingContract });
     setAccount(currentAccount);
   };

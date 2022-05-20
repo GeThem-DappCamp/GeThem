@@ -29,7 +29,7 @@ contract Job {
         uint256[] candidatesIds;
         address recruiter_address;
     }
-    mapping(uint256 => mapping(uint256 => HiringStatus)) cadidateId_jobId_interviewStatus;
+    mapping(uint256 => mapping(uint256 => HiringStatus)) jobId_cadidateId_interviewStatus;
     mapping(uint256 => JobStructure) public jobs;
     uint256 public jobs_length = 0;
     JobStructure[] recruiter_jobs;

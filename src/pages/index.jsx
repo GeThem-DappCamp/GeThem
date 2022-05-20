@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import NFT from "../components/NFT";
-import Layout from "../components/Layout";
+// import NFT from "../components/NFT";
+// import Layout from "../components/Layout";
 
 import { useAccount, useContracts } from "../contexts";
 
@@ -13,8 +13,8 @@ export default function Home() {
 
   const loadNfts = async () => {
     const baseUri = await dcWarriorsContract.baseURI();
-
     const hexCounter = await dcWarriorsContract._tokenIds();
+
     const counter = parseInt(hexCounter._hex, 16);
 
     const nfts = await Promise.all(

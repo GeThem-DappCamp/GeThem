@@ -1,0 +1,37 @@
+.menu{
+    background-color: #172B48;
+    height: 100vh;
+    width: 21vw;
+    min-width: 200px;
+    &-logo{
+        width: 15vw !important;
+        min-width: 180px;
+        padding-bottom: 40px;
+        padding-left: 15px;
+        margin-top: 80px;
+
+    }
+   
+    &-item{
+        display: flex;
+        color: #B5BBC4;
+        font-size: 18px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding-left: 35px;
+        margin-top: 15px;
+    }
+    &-item > p{
+        padding-left: 30px;
+    }
+    &-active{
+        color: white;
+        background-color: #213656;
+    }
+}
+
+.makeStyles-toolbar-5 {
+    min-height: 0 !important;
+}

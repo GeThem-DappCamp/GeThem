@@ -1,13 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
-import "./Recruiter.sol";
 
-contract Job is Recruiter {
+contract Job {
     address public owner;
 
-    constructor(address aowner) {
-        owner = aowner;
-    }
 
     enum HiringStatus {
         WAITING,
@@ -31,18 +27,14 @@ contract Job is Recruiter {
         uint256 initTimestamp;
         JobStatus status; //closed or open
         Stake stake;
-        //how to set an empty mapping while creating a new job?? => Yes OK => NO we should make candidates mapping outside of job struct
-        //Does returning an array costs a lot of gas?? or just manipulating it cost gas???
-        //1
-        mapping(address => HiringStatus) candidates; //candidate ID => candidates_address => hiring_status
-        //uint256 candidates_length;
-        address[] candidates_addresses;
+        uint256[] candidatesIds;
+        address recruiter_address;
     }
-    //2
-    mapping(string => mapping(address => HiringStatus)) jobToCandidateStatus; //=> 1 OR 2
-
+    mapping(uint256 => mapping(uint256 => HiringStatus)) jobId_cadidateId_interviewStatus;
     mapping(uint256 => JobStructure) public jobs;
     uint256 public jobs_length = 0;
+    JobStructure[] recruiter_jobs;
+
 
     struct Stake {
         address account;
@@ -58,12 +50,9 @@ contract Job is Recruiter {
         string memory job_type,
         uint256 initTimestamp,
         uint256 amount
-    ) public payable {
-        require(
-            Recruiter.isRecruiter(msg.sender),
-            "Error sender is not a recruiter"
-        );
+    ) public payable returns (uint256) {
         Stake memory stake = Stake(address(this), amount, block.timestamp);
+        uint256[] memory candidateIds = new uint256[](0);
 
         jobs[jobs_length] = JobStructure({
             company_name: company_name,
@@ -74,9 +63,24 @@ contract Job is Recruiter {
             initTimestamp: initTimestamp,
             status: JobStatus.OPEN,
             stake: stake,
-            candidates: 0,
-            candidates_length: 0
+            candidatesIds: candidateIds,
+            recruiter_address: msg.sender
         });
         jobs_length++;
+        return jobs_length - 1;
+    }
+
+    function getJobsByAddress(address recruiter_address)
+        public
+        returns (JobStructure[] memory)
+    {
+        for (uint256 i = 0; i < jobs_length; i++) {
+            if (jobs[i].recruiter_address == recruiter_address) {
+                JobStructure memory job = jobs[i];
+                recruiter_jobs.push(job);
+            }
+        }
+        return recruiter_jobs;
+
     }
 }

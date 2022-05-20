@@ -17,12 +17,6 @@ contract Job {
         CLOSED
     }
 
-    struct Stake {
-        address account;
-        uint256 amount;
-        uint256 initTimestamp;
-    }
-
     struct JobStructure {
         string company_name;
         string company_logo;
@@ -35,25 +29,16 @@ contract Job {
         uint256[] candidatesIds;
         address recruiter_address;
     }
-
-    //ask: why do we need below mapping if we can directly access array based on ID?
+    mapping(uint256 => mapping(uint256 => HiringStatus)) jobId_cadidateId_interviewStatus;
     mapping(uint256 => JobStructure) public jobs;
     uint256 public jobs_length = 0;
-    JobStructure[] recruiter_jobs;
+    mapping(address => uint256) public recruiterToJobCount;
 
-    struct Application {
-        uint256 candidateId;
-        uint256 referrerId;
-        // uint256 recruiterId;
-        uint256 jobId;
-        HiringStatus hiringStatus;
-        string skillsets;
+    struct Stake {
+        address account;
+        uint256 amount;
+        uint256 initTimestamp;
     }
-    Application[] applications;
-    mapping(uint256 => uint256[]) candidateAdress_applicationIds;
-    mapping(uint256 => uint256[]) referrerId_applicationIds;
-
-    // mapping(uint256 => mapping(uint256 => HiringStatus)) cadidateId_jobId_hiringStatus;
 
     function createJob(
         string memory company_name,
@@ -67,7 +52,6 @@ contract Job {
         Stake memory stake = Stake(address(this), amount, block.timestamp);
         uint256[] memory candidateIds = new uint256[](0);
 
-        //ask: instead of adding to map, add to array
         jobs[jobs_length] = JobStructure({
             company_name: company_name,
             company_logo: company_logo,
@@ -80,19 +64,25 @@ contract Job {
             candidatesIds: candidateIds,
             recruiter_address: msg.sender
         });
+        recruiterToJobCount[msg.sender]++;
         jobs_length++;
         return jobs_length - 1;
     }
 
     function getJobsByAddress(address recruiter_address)
         public
+        view
         returns (JobStructure[] memory)
     {
-        //ask: we can maintain a mapping(recruiter_address to jobIds), based on IDs form an array and return it
+        JobStructure[] memory recruiter_jobs = new JobStructure[](
+            recruiterToJobCount[msg.sender]
+        );
+        uint256 counter = 0;
+
         for (uint256 i = 0; i < jobs_length; i++) {
             if (jobs[i].recruiter_address == recruiter_address) {
-                JobStructure memory job = jobs[i];
-                recruiter_jobs.push(job);
+                recruiter_jobs[counter] = jobs[i];
+                counter++;
             }
         }
         return recruiter_jobs;

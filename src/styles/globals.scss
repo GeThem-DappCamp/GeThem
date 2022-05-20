@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+@import "./job.scss";
+@import "./menu.scss";
+@import "./candidates.scss";
+@import "./home.scss";
+@import "./avatar.scss";
+
+body{
+    background-color: #0D192B !important;
+    color: white !important;
+    font-family: "Roboto";
+}
+
+
+.wrapper{
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    &-back{
+        width: 70vw;
+        margin-top: 40px;
+    }
+    &-back > a{
+        color: #FF5D56;
+        font-size: 18px;
+        padding-left: 5px;
+        text-decoration: underline;
+    }
+    &-container{
+        width: 80vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        margin-top: 40px;
+
+    }
+    &-header{
+        display: flex;
+        justify-content: space-between;
+        width: 70vw;
+        margin-top: 20px;
+
+    }
+    &-body > h1{
+        font-size: 24px;
+        font-weight: 500;
+    }
+   
+
+}
+.MuiDrawer-paperAnchorDockedLeft{
+    border-right-width: 0 !important;
+}
+
+.right{
+    justify-content: end;
+}
+
+.wrapper > div> header{
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.wrapper-body{
+    background-color: #162844;
+    border-radius: 12px;
+    width: 70vw;
+    padding: 50px;
+    margin-top: 30px;
+}
+@media (max-width:974px) {
+    .wrapper-container{
+        width: calc(100vw - 200px);
+    }
+     .wrapper-header{
+        width: calc(100vw - 300px);
+    }
+    
+}
+@media (max-width:680px) {
+    .wrapper-container{
+        width: calc(100vw - 250px);
+    }    
+}
+
+
+@media (max-width:599px) {
+    .wrapper-container, .wrapper-header, .wrapper-body, .wrapper-back{
+        width: 92vw;
+    }
+   
+    .wrapper{
+        justify-content: center;
+        &-header > h1{
+            font-size: 30px;
+        }
+    }
+    
+}

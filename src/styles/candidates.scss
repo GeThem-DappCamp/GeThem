@@ -1,0 +1,67 @@
+
+.candidates-table{
+    margin-top: 20px;
+    thead > tr > th{
+        color:#DEE1E5 !important;
+        background-color: #162844!important;
+        font-size: 15px!important;
+        font-weight: 200!important;
+        border-bottom: 18px  solid #162844
+    }
+    tbody > tr{
+        border-bottom: 18px solid #162844 !important;
+        border-radius: 20px !important;
+        background-color: #213656 !important;
+
+    }
+    tbody > tr > th, td{
+        font-size: 16px;
+        background-color: transparent;
+        color: white;
+    }
+   
+}
+
+
+.candidate{
+    
+    &-avatar{
+        width: 47px !important;
+        height: 47px !important;
+    }
+    &-avatar > img{
+        border-width: 0 !important;
+
+    }
+
+    &-dropdown{
+        color: white !important;
+    }
+    &-dropdown::before, &-dropdown::after{
+        border-bottom-color:#B5B3BD  !important;
+    }
+    &-dropdown > svg{
+        color: #B5B3BD !important;
+    }
+}
+
+.status{
+    font-size: 12px;
+    border-radius: 12px;
+    padding: 5px 10px;
+    text-align: center;
+
+}
+.Waiting,  .Round{
+    color: #E5E5E5;
+    background-color: #485973;
+}
+.Rejected{
+    color: #FF5D56;
+    background-color: #523F56;
+}
+
+.Accepted{
+    color: #13B010;
+    background-color: #1F4C49;
+}

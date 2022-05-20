@@ -5,10 +5,10 @@ export default class Document extends NextDocument {
     return (
       <Html>
         <Head>
-          <title>DappCamp Warriors</title>
+          <title>GeThem</title>
           <meta
             name="description"
-            content="DappCamp Warriors is a tutorial project from DappCamp"
+            content="GeThem is a recruitment platform"
           ></meta>
           <meta
             name="viewport"

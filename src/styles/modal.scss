@@ -1,0 +1,38 @@
+.jobModal{
+    position: absolute !important;
+    z-index: 1500 !important;
+    background-color: rgba(0,0,0,0.4);
+    &-title{
+        font-size: 18px;
+        color: #fff;
+        text-align: center;
+    }
+
+    &-label{
+        font-size: 16px !important;
+        color: #eaf1fb !important;
+    }
+    .modal-content{
+        background-color: #172B48;
+    }
+    .form-control{
+        background-color: #1c3659;
+        border: none
+    }
+    .mb-3{
+        margin-top: 15px;
+    }
+    .btn-close{
+         background-color: #2b3e59 !important;
+    }
+    input:focus{
+        background-color: #1c3559;
+        color: white;
+    }
+  
+}
+
+
+.modal-header, .modal-footer{
+    border-width: 0 !important;
+}

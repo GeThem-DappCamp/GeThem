@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0
 
 pragma solidity >=0.7.0 <0.9.0;
-import "hardhat/console.sol";
+
+// import "hardhat/console.sol";
 
 contract Candidate {
     struct CandidateStruct {
@@ -13,8 +14,8 @@ contract Candidate {
 
     mapping(address => uint256) public addressToCandidate;
     mapping(uint256 => address) public candidateToAddress;
-    mapping(address => uint256) candidateToJobCount;
-    mapping(address => uint256[]) candidateToJobIds;
+    // mapping(address => uint256) candidateToJobCount;
+    // mapping(address => uint256[]) candidateToJobIds;
     CandidateStruct[] public candidates;
 
     // uint256 candidateCount;
@@ -22,16 +23,21 @@ contract Candidate {
     function createCandidate(
         string memory name,
         string memory email,
-        string memory company
-    ) public {
+        string memory company,
+        address candidateAddress
+    ) internal {
         candidates.push(CandidateStruct(name, email, company, true));
         uint256 candidateId = candidates.length - 1;
-        addressToCandidate[msg.sender] = candidateId;
+        addressToCandidate[candidateAddress] = candidateId;
         // candidateCount++;
-        candidateToAddress[candidateId] = msg.sender;
+        candidateToAddress[candidateId] = candidateAddress;
     }
 
-    function isCandidate(address _candidateAddress) public view returns (bool) {
+    function isCandidate(address _candidateAddress)
+        internal
+        view
+        returns (bool)
+    {
         return candidates[addressToCandidate[_candidateAddress]].exists;
     }
 }

@@ -50,9 +50,9 @@ contract Job {
     }
     Application[] applications;
     mapping(uint256 => uint256[]) referrerId_applicationIds;
+    mapping(uint256 => uint256[]) candidateId_applicationIds;
 
     // mapping(uint256 => mapping(uint256 => HiringStatus)) jobId_cadidateId_interviewStatus;
-    // mapping(uint256 => uint256[]) candidateAdress_applicationIds;
 
     function createJob(
         string memory company_name,
@@ -102,7 +102,7 @@ contract Job {
         return recruiter_jobs;
     }
 
-    function getAllOpenJobs() public view returns (JobStructure[] memory) {
+    function getAllOpenJobs() internal view returns (JobStructure[] memory) {
         JobStructure[] memory allOpenJobs = new JobStructure[](jobs_length);
         uint256 counter = 0;
 

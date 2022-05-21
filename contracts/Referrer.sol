@@ -17,13 +17,13 @@ contract Referrer {
     }
 
     ReferrerStruct[] referrers;
-    mapping(address => uint256) referrerAddress_referrerId;
+    mapping(address => uint256) address_referrerId;
 
-    function createReferrerAccount(
+    function createReferrer(
         string memory _name,
         string memory _email,
         string memory _community_names
-    ) public {
+    ) internal {
         ReferrerStruct memory newReferrer = ReferrerStruct({
             name: _name,
             email: _email,
@@ -36,19 +36,14 @@ contract Referrer {
         });
         referrers.push(newReferrer);
         uint256 referrerId = referrers.length - 1;
-        referrerAddress_referrerId[msg.sender] = referrerId;
+        address_referrerId[msg.sender] = referrerId;
     }
 
-    function isReferrer(address referrer_address) public view returns (bool) {
-        uint256 referrerId = referrerAddress_referrerId[referrer_address];
+    function isReferrer(address referrer_address) internal view returns (bool) {
+        uint256 referrerId = address_referrerId[referrer_address];
         if (referrers[referrerId].exists) {
             return true;
         }
         return false;
-    }
-
-    function referCandidate() public {
-        //create a candidate if not present
-        //create an application based on job_id, candidate_id
     }
 }

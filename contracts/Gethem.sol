@@ -8,6 +8,7 @@ import "./Candidate.sol";
 contract GeThem is Job, Recruiter, Referrer, Candidate {
     constructor() {}
 
+    ////////////////////////////////////Recruiter functions//////////////////////////////////////////////////////
     modifier onlyRecruiter() {
         require(
             Recruiter.isRecruiter(msg.sender),
@@ -16,15 +17,6 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         _;
     }
 
-    modifier onlyReferrer() {
-        require(
-            Referrer.isReferrer(msg.sender),
-            "Error sender is not a recruiter"
-        );
-        _;
-    }
-
-    ////////////////////////////////////Recruiter functions//////////////////////////////////////////////////////
     function createJobByRecruiter(
         string memory company_name,
         string memory company_logo,
@@ -73,6 +65,22 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
     }
 
     ////////////////////////////////////Referrer functions//////////////////////////////////////////////////////
+    modifier onlyReferrer() {
+        require(
+            Referrer.isReferrer(msg.sender),
+            "Error sender is not a referrer"
+        );
+        _;
+    }
+
+    function createReferrerAccount(
+        string memory _name,
+        string memory _email,
+        string memory _community_names
+    ) public {
+        Referrer.createReferrer(_name, _email, _community_names);
+    }
+
     struct ReferralListStruct {
         string candidate_name;
         string referrer_name;
@@ -86,7 +94,7 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         onlyReferrer
         returns (ReferralListStruct[] memory)
     {
-        uint256 referrerId = Referrer.referrerAddress_referrerId[msg.sender];
+        uint256 referrerId = Referrer.address_referrerId[msg.sender];
         uint256[] memory applicationIds = Job.referrerId_applicationIds[
             referrerId
         ];
@@ -110,7 +118,62 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         return referrals;
     }
 
+    function referCandidate(
+        string memory candidateName,
+        string memory candidateEmail,
+        string memory candidateCompany,
+        address candidateAddress,
+        uint256 job_id
+    ) public onlyReferrer {
+        if (isCandidate(candidateAddress) == false) {
+            createCandidateAccount(
+                candidateName,
+                candidateEmail,
+                candidateCompany,
+                candidateAddress
+            );
+        }
+
+        uint256 candidate_id = addressToCandidate[candidateAddress];
+        uint256 referrer_id = address_referrerId[msg.sender];
+        Application memory newApplication = Application({
+            candidateId: candidate_id,
+            referrerId: referrer_id,
+            jobId: job_id,
+            hiringStatus: HiringStatus.WAITING,
+            skillsets: ""
+        });
+
+        Job.applications.push(newApplication);
+
+        candidateId_applicationIds[candidate_id].push(Job.applications.length);
+        referrerId_applicationIds[referrer_id].push(Job.applications.length);
+    }
+
+    function getApplications() public view returns (Application[] memory) {
+        return Job.applications;
+    }
+
+    ////////////////////////////////////Candidate functions//////////////////////////////////////////////////////
+    modifier onlyCandidate() {
+        require(isCandidate(msg.sender), "Error sender is not a candidate");
+        _;
+    }
+
+    function createCandidateAccount(
+        string memory _name,
+        string memory _email,
+        string memory _company,
+        address _candidateAddress
+    ) public {
+        //using _candidateAddress instead of msg.sender because the same function will be called by referrer
+        createCandidate(_name, _email, _company, _candidateAddress);
+    }
+
     function getOpenJobs() public view returns (JobStructure[] memory) {
         return Job.getAllOpenJobs();
     }
+
+    //updateSkillSets() for a particular application
+    //listOfApplications() for a candidate - similar to listOfReferrals() above
 }

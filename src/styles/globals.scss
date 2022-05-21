@@ -7,6 +7,7 @@
 @import "./candidates.scss";
 @import "./home.scss";
 @import "./avatar.scss";
+@import "./modal.scss";
 
 body{
     background-color: #0D192B !important;
@@ -72,6 +73,9 @@ body{
     width: 70vw;
     padding: 50px;
     margin-top: 30px;
+}
+ul{
+     padding-left: 0 !important
 }
 @media (max-width:974px) {
     .wrapper-container{

@@ -12,11 +12,13 @@ import {
 } from "../utils/common";
 
 import addresses from "../../addresses.json";
+import gethemSolContract from "../../artifacts/contracts/Gethem.sol/GeThem.json";
 import campSolContract from "../../artifacts/contracts/Camp.sol/Camp.json";
 import nftSolContract from "../../artifacts/contracts/DappCampWarriors.sol/DappCampWarriors.json";
 import stakingSolContract from "../../artifacts/contracts/Staking.sol/Staking.json";
 import "../styles/globals.scss";
 
+const gethemContractAddr = addresses[networkName].gethem;
 const campContractAddr = addresses[networkName].camp;
 const dappCampWarriorsContractAddr = addresses[networkName].dappCampWarriors;
 export const stakingContractAddr = addresses[networkName].staking;
@@ -26,6 +28,7 @@ function MyApp({ Component, pageProps }) {
 
   const [account, setAccount] = useState(null);
   const [contracts, setContracts] = useState({
+    gethemContract: null,
     campContract: null,
     dcWarriorsContract: null,
     stakingContract: null,
@@ -40,10 +43,16 @@ function MyApp({ Component, pageProps }) {
 
     setupEthereumEventListeners(ethereum);
 
+    const gethemContract = getSignedContract(
+      gethemContractAddr,
+      gethemSolContract.abi
+    );
+
     const campContract = getSignedContract(
       campContractAddr,
       campSolContract.abi
     );
+
     const dcWarriorsContract = getSignedContract(
       dappCampWarriorsContractAddr,
       nftSolContract.abi
@@ -53,11 +62,22 @@ function MyApp({ Component, pageProps }) {
       stakingSolContract.abi
     );
 
-    if (!campContract || !dcWarriorsContract || !stakingContract) return;
+    if (
+      !gethemContract ||
+      !campContract ||
+      !dcWarriorsContract ||
+      !stakingContract
+    )
+      return;
 
     const currentAccount = await getCurrentAccount();
 
-    setContracts({ campContract, dcWarriorsContract, stakingContract });
+    setContracts({
+      gethemContract,
+      campContract,
+      dcWarriorsContract,
+      stakingContract,
+    });
     setAccount(currentAccount);
   };
 

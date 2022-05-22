@@ -4,6 +4,7 @@ import { network } from "hardhat";
 import { join } from "path";
 
 type AddressGroup = {
+  gethem: string;
   camp: string;
   dappCampWarriors: string;
   staking: string;

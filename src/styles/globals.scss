@@ -54,6 +54,44 @@ body{
    
 
 }
+
+.users{
+    padding: 0 5vw;
+    display: grid;
+    grid-template-columns: repeat(3,26vw);
+    -moz-column-gap: 2vw;
+    column-gap: 4vw;
+    justify-content: center;
+    align-content: center;
+    padding-top: 20vh;
+
+    &-card{
+        background-color: #162844;
+        border-radius: 8px;
+        padding: 60px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        cursor: pointer;
+       
+    }
+    &-card img{
+        width: 150px !important;
+
+    }
+    &-card:hover {
+        box-shadow: 0 0 0 2px #fff, 0 0 1.6rem 0 hsla(0, 0%, 100%, 0.32);
+        transition: 0.8s;
+    }
+    &-card p{
+        font-size: 20px;
+        font-weight: 700;
+        text-align: center;
+        margin-top: 50px !important;
+
+    }
+}
 .MuiDrawer-paperAnchorDockedLeft{
     border-right-width: 0 !important;
 }
@@ -77,6 +115,13 @@ body{
 ul{
      padding-left: 0 !important
 }
+.toast{
+    position: absolute;
+    z-index: 3000;
+}
+p{
+    margin-bottom: 0 !important;
+}
 @media (max-width:974px) {
     .wrapper-container{
         width: calc(100vw - 200px);
@@ -87,6 +132,18 @@ ul{
     
 }
 @media (max-width:680px) {
+    .users{
+        padding: 0 5vw;
+        grid-template-columns: 60vw;
+        grid-template-rows: repeat(3, 300px);
+        row-gap: 20px;
+        &-card{
+            height: 300px;
+        }
+        &-card img{
+            width: 100px !important;
+        }
+    }
     .wrapper-container{
         width: calc(100vw - 250px);
     }    

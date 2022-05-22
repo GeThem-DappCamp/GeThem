@@ -4,22 +4,24 @@ import { ethers } from "ethers";
 // 4: Rinkeby
 // 1337: localhost network
 
-const networkId = process.env.NEXT_PUBLIC_NETWORK_ID || "1337";
+const networkId = "4";
 const networks = {
   1: "mainnet",
   4: "rinkeby",
   1337: "localhost",
 };
-export const networkName = networks[networkId];
+export const networkName = "rinkeby";
+//networks[networkId];
 
 export const getEthereumObject = () => {
   const { ethereum } = window;
+  console.log("=====getEthereumObject", ethereum.networkVersion, networkId);
   if (!ethereum) return null;
 
-  if (ethereum.networkVersion != networkId) {
-    // alert(`Please switch to the ${networkName} network`)
-    return null;
-  }
+  // if (ethereum.networkVersion != networkId) {
+  //   // alert(`Please switch to the ${networkName} network`)
+  //   return null;
+  // }
 
   return ethereum;
 };
@@ -33,7 +35,7 @@ export const setupEthereumEventListeners = (ethereum) => {
   });
 
   window.ethereum.on("accountsChanged", async (accounts) => {
-    window.location.reload();
+    // window.location.reload();
   });
 
   return ethereum;
@@ -41,10 +43,11 @@ export const setupEthereumEventListeners = (ethereum) => {
 
 export const connectWallet = async () => {
   const { ethereum } = window;
+  console.log("======ethereum", ethereum);
   if (!ethereum) return null;
 
   await ethereum.request({ method: "eth_requestAccounts" });
-  location.reload();
+  // location.reload();
 };
 
 export const getCurrentAccount = async () => {

@@ -1,15 +1,16 @@
-import { createContext, useContext } from 'react';;
+import { createContext, useContext } from "react";
 
 export const AccountContext = createContext("");
 export const ContractsContext = createContext({
-    campContract: null,
-    dcWarriorsContract: null,
-    stakingContract: null
-})
+  gethemContract: null,
+  campContract: null,
+  dcWarriorsContract: null,
+  stakingContract: null,
+});
 
 export function useAccount() {
-    return useContext(AccountContext);
+  return useContext(AccountContext);
 }
 export function useContracts() {
-    return useContext(ContractsContext);
+  return useContext(ContractsContext);
 }

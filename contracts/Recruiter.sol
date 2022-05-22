@@ -2,14 +2,22 @@
 pragma solidity ^0.8.4;
 
 contract Recruiter {
-    address public account;
+     modifier onlyRecruiter() {
+        require(
+            Recruiter.isRecruiter(msg.sender),
+            "Error sender is not a recruiter"
+        );
+        _;
+    }
 
     struct RecruiterStruct {
         string name;
         string email;
         bool exist;
     }
-    mapping(address => RecruiterStruct) public recruiters;
+    mapping(uint256 => RecruiterStruct) public recruiters;
+    mapping(address => uint256) public address_recruiterId;
+    uint256 public recruiterCount;
     mapping(address => uint256[]) public recruiterAddress_openJobsIds;
 
     function createRecruiterAccount(
@@ -17,12 +25,15 @@ contract Recruiter {
         string memory name,
         string memory email
     ) public {
+        recruiterCount++;
         RecruiterStruct memory recruiter = RecruiterStruct(name, email, true);
-        recruiters[recruiter_address] = recruiter;
+        recruiters[recruiterCount] = recruiter;
+        address_recruiterId[recruiter_address] = recruiterCount;
     }
 
     function isRecruiter(address recruiter_address) public view returns (bool) {
-        if (recruiters[recruiter_address].exist) {
+        uint256 recruiterId = address_recruiterId[recruiter_address];
+        if (recruiterId != 0 && recruiters[recruiterId].exist) {
             return true;
         }
         return false;

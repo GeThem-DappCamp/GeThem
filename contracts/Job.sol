@@ -12,6 +12,16 @@ contract Job {
         REJECTED
     }
 
+     function getHiringStateByUint(uint id) internal pure returns (HiringStatus) {
+       if(id == 0) return HiringStatus.WAITING;
+       if(id == 1) return HiringStatus.ROUND1;
+       if(id == 2) return HiringStatus.ROUND2;
+       if(id == 3) return HiringStatus.ACCEPTED;
+       if(id == 4) return HiringStatus.REJECTED;
+       revert();
+   }
+
+
     enum JobStatus {
         OPEN,
         CLOSED
@@ -26,12 +36,12 @@ contract Job {
         uint256 initTimestamp;
         JobStatus status; //closed or open
         Stake stake;
-        uint256[] candidatesIds;
         address recruiter_address;
     }
 
     mapping(uint256 => JobStructure) public jobs;
-    uint256 public jobs_length = 0;
+    uint256 public jobs_length;
+    //ask: is the below mapping required since we have recruiterAddress_openJobsIds in referrer.sol
     mapping(address => uint256) public recruiterToJobCount;
 
     struct Stake {
@@ -43,14 +53,17 @@ contract Job {
     struct Application {
         uint256 candidateId;
         uint256 referrerId;
-        // uint256 recruiterId;
         uint256 jobId;
         HiringStatus hiringStatus;
         string skillsets;
+        string currentPosition;
+        string linkedinProfile;
+        uint yearsOfExperience;
     }
     Application[] applications;
     mapping(uint256 => uint256[]) referrerId_applicationIds;
     mapping(uint256 => uint256[]) candidateId_applicationIds;
+    mapping(uint => uint) jobToApplicationCount;
 
     // mapping(uint256 => mapping(uint256 => HiringStatus)) jobId_cadidateId_interviewStatus;
 
@@ -60,11 +73,9 @@ contract Job {
         string memory details,
         string memory salary,
         string memory job_type,
-        uint256 initTimestamp,
         uint256 amount
-    ) public payable returns (uint256) {
+    ) internal returns (uint256) {
         Stake memory stake = Stake(address(this), amount, block.timestamp);
-        uint256[] memory candidateIds = new uint256[](0);
 
         jobs[jobs_length] = JobStructure({
             company_name: company_name,
@@ -72,10 +83,9 @@ contract Job {
             details: details,
             salary: salary,
             job_type: job_type,
-            initTimestamp: initTimestamp,
+            initTimestamp: block.timestamp,
             status: JobStatus.OPEN,
             stake: stake,
-            candidatesIds: candidateIds,
             recruiter_address: msg.sender
         });
         recruiterToJobCount[msg.sender]++;
@@ -91,7 +101,7 @@ contract Job {
         JobStructure[] memory recruiter_jobs = new JobStructure[](
             recruiterToJobCount[msg.sender]
         );
-        uint256 counter = 0;
+        uint256 counter;
 
         for (uint256 i = 0; i < jobs_length; i++) {
             if (jobs[i].recruiter_address == recruiter_address) {
@@ -100,6 +110,18 @@ contract Job {
             }
         }
         return recruiter_jobs;
+    }
+
+    function getApplicationsForJob(uint _jobId) public view returns (Application[] memory) {
+        Application[] memory applicationsForJob = new Application[](jobToApplicationCount[_jobId]);
+        uint256 counter;
+        for (uint256 i = 0; i < applications.length; i++) {
+            if (applications[i].jobId == _jobId) {
+                applicationsForJob[counter] = applications[i];
+                counter++;
+            }
+        }
+        return applicationsForJob;
     }
 
     function getAllOpenJobs() internal view returns (JobStructure[] memory) {

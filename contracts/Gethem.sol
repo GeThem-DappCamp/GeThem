@@ -44,10 +44,6 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         onlyRecruiter
         returns (Job.JobStructure[] memory)
     {
-        require(
-            Recruiter.isRecruiter(recruiter_address),
-            "Error sender is not a recruiter"
-        );
         JobStructure[] memory recruiter_jobs = Job.getJobsByAddress(
             recruiter_address
         );
@@ -55,13 +51,23 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         return recruiter_jobs;
     }
 
-    function getTopReferrers()
+    function allReferrers()
         public
         view
         onlyRecruiter
         returns (ReferrerStruct[] memory)
     {
-        return Referrer.referrers;
+        //this func will return all referrers sorting if needed will be done at frontend
+
+        //Note: referrerIds starts with 1
+        ReferrerStruct[] memory topReferrers = new ReferrerStruct[](
+            referrerCount
+        );
+
+        for (uint256 i = 1; i <= referrerCount; i++) {
+            topReferrers[i - 1] = referrers[i];
+        }
+        return topReferrers;
     }
 
     ////////////////////////////////////Referrer functions//////////////////////////////////////////////////////
@@ -94,7 +100,7 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         onlyReferrer
         returns (ReferralListStruct[] memory)
     {
-        uint256 referrerId = Referrer.address_referrerId[msg.sender];
+        uint256 referrerId = address_referrerId[msg.sender];
         uint256[] memory applicationIds = Job.referrerId_applicationIds[
             referrerId
         ];
@@ -107,10 +113,8 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
             Job.Application memory application = Job.applications[i];
 
             referrals[i] = ReferralListStruct({
-                candidate_name: Candidate
-                    .candidates[application.candidateId]
-                    .name,
-                referrer_name: Referrer.referrers[application.referrerId].name,
+                candidate_name: candidates[application.candidateId].name,
+                referrer_name: referrers[application.referrerId].name,
                 referred_company: Job.jobs[application.jobId].company_name,
                 hiring_status: application.hiringStatus
             });
@@ -134,8 +138,9 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
             );
         }
 
-        uint256 candidate_id = addressToCandidate[candidateAddress];
+        uint256 candidate_id = address_candidateId[candidateAddress];
         uint256 referrer_id = address_referrerId[msg.sender];
+
         Application memory newApplication = Application({
             candidateId: candidate_id,
             referrerId: referrer_id,
@@ -145,9 +150,10 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         });
 
         Job.applications.push(newApplication);
+        uint256 applicationId = Job.applications.length;
 
-        candidateId_applicationIds[candidate_id].push(Job.applications.length);
-        referrerId_applicationIds[referrer_id].push(Job.applications.length);
+        candidateId_applicationIds[candidate_id].push(applicationId);
+        referrerId_applicationIds[referrer_id].push(applicationId);
     }
 
     function getApplications() public view returns (Application[] memory) {

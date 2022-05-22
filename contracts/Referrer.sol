@@ -12,12 +12,12 @@ contract Referrer {
         uint256 reputation_score;
         uint256 referral_count;
         uint256 total_rewards_earned;
-        bool exists;
-        address referrer_address;
+        bool exist;
     }
 
-    ReferrerStruct[] referrers;
-    mapping(address => uint256) address_referrerId;
+    mapping(uint256 => ReferrerStruct) public referrers;
+    mapping(address => uint256) public address_referrerId;
+    uint256 public referrerCount;
 
     function createReferrer(
         string memory _name,
@@ -31,17 +31,16 @@ contract Referrer {
             reputation_score: 0,
             referral_count: 0,
             total_rewards_earned: 0,
-            exists: true,
-            referrer_address: msg.sender
+            exist: true
         });
-        referrers.push(newReferrer);
-        uint256 referrerId = referrers.length - 1;
-        address_referrerId[msg.sender] = referrerId;
+        referrerCount++;
+        referrers[referrerCount] = newReferrer;
+        address_referrerId[msg.sender] = referrerCount;
     }
 
     function isReferrer(address referrer_address) internal view returns (bool) {
         uint256 referrerId = address_referrerId[referrer_address];
-        if (referrers[referrerId].exists) {
+        if (referrerId != 0 && referrers[referrerId].exist) {
             return true;
         }
         return false;

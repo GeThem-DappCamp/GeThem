@@ -9,16 +9,12 @@ contract Candidate {
         string name;
         string email;
         string currentCompany;
-        bool exists;
+        bool exist;
     }
 
-    mapping(address => uint256) public addressToCandidate;
-    mapping(uint256 => address) public candidateToAddress;
-    // mapping(address => uint256) candidateToJobCount;
-    // mapping(address => uint256[]) candidateToJobIds;
-    CandidateStruct[] public candidates;
-
-    // uint256 candidateCount;
+    mapping(uint256 => CandidateStruct) public candidates;
+    mapping(address => uint256) public address_candidateId;
+    uint256 public candidateCount;
 
     function createCandidate(
         string memory name,
@@ -26,11 +22,20 @@ contract Candidate {
         string memory company,
         address candidateAddress
     ) internal {
-        candidates.push(CandidateStruct(name, email, company, true));
-        uint256 candidateId = candidates.length - 1;
-        addressToCandidate[candidateAddress] = candidateId;
-        // candidateCount++;
-        candidateToAddress[candidateId] = candidateAddress;
+        // candidates.push(CandidateStruct(name, email, company, true));
+        // uint256 candidateId = candidates.length - 1;
+        // addressToCandidate[candidateAddress] = candidateId;
+        // candidateToAddress[candidateId] = candidateAddress;
+
+        candidateCount++;
+        CandidateStruct memory candidate = CandidateStruct(
+            name,
+            email,
+            company,
+            true
+        );
+        candidates[candidateCount] = candidate;
+        address_candidateId[candidateAddress] = candidateCount;
     }
 
     function isCandidate(address _candidateAddress)
@@ -38,6 +43,10 @@ contract Candidate {
         view
         returns (bool)
     {
-        return candidates[addressToCandidate[_candidateAddress]].exists;
+        uint256 candidateId = address_candidateId[_candidateAddress];
+        if (candidateId != 0 && candidates[candidateId].exist) {
+            return true;
+        }
+        return false;
     }
 }

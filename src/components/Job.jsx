@@ -2,8 +2,22 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import brickseek from "../assets/images/brickseek.png";
 import candidates from "../assets/images/candidates.svg";
+import oneCandidate from "../assets/images/oneCandidate.svg";
+import twoCandidate from "../assets/images/twoCandidate.svg";
+import TimeAgo from "javascript-time-ago";
 
-export default function Job({ jobId }) {
+export default function Job({
+  jobId,
+  name,
+  logo,
+  position,
+  salary,
+  type,
+  time,
+  status,
+  amount,
+  candidatesIds,
+}) {
   const router = useRouter();
 
   return (
@@ -20,18 +34,35 @@ export default function Job({ jobId }) {
       </div>
       <div className="job-card">
         <div>
-          <h1 className="job-title">Job #1233</h1>
-          <p className="job-subtitle">BrickSeek - Front End Developer</p>
+          <h1 className="job-title">Job #{jobId}</h1>
+          <p className="job-subtitle">{name + " - " + position}</p>
           <div className="job-description">
-            <p>$80k - $100k</p>
-            <p>Remote</p>
+            <p>{salary}</p>
+            <p>{type}</p>
           </div>
         </div>
         <div className="job-trailing">
-          <p className="job-date">3 days ago</p>
+          <p className="job-date">{time}</p>
           <div className="job-candidates">
-            <Image src={candidates} alt="" />
-            <p>+3 candidates</p>
+            {candidatesIds.length > 0 ? (
+              <Image
+                src={
+                  candidatesIds.length == 1
+                    ? oneCandidate
+                    : candidatesIds.length == 2
+                    ? twoCandidate
+                    : candidates
+                }
+                alt=""
+              />
+            ) : null}
+            {candidatesIds.length == 1 ? (
+              <p> {"1 candidate"}</p>
+            ) : candidatesIds.length <= 3 ? (
+              <p> {candidatesIds.length + " candidates"}</p>
+            ) : (
+              <p> {"+3 candidates"}</p>
+            )}
           </div>
         </div>
       </div>

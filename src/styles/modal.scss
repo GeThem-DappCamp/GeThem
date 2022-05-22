@@ -10,13 +10,24 @@
 
     &-label{
         font-size: 16px !important;
-        color: #eaf1fb !important;
+        color: #94a0b1 !important;
+    }
+    &-error{
+        color: #bb3d3f;
+        font-size: 14px;
+        font-weight: 700;
+        text-align: center;
+
+    }
+    .modal-body, .modal-header{
+        padding-bottom: 0 !important;
     }
     .modal-content{
-        background-color: #172B48;
+        background-color: #23395a;
     }
     .form-control{
         background-color: #1c3659;
+        color: #fff !important;
         border: none
     }
     .mb-3{
@@ -29,6 +40,7 @@
         background-color: #1c3559;
         color: white;
     }
+    
   
 }
 

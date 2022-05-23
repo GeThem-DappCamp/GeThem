@@ -29,28 +29,12 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         Recruiter.recruiterAddress_openJobsIds[msg.sender].push(job_id);
     }
 
-    function getJobsByRecruiterAddress(address recruiter_address)
-        public
-        view
-        onlyRecruiter
-        returns (Job.JobStructure[] memory)
-    {
-        JobStructure[] memory recruiter_jobs = Job.getJobsByAddress(
-            recruiter_address
-        );
-
-        return recruiter_jobs;
-    }
-
     function allReferrers()
         public
         view
         onlyRecruiter
         returns (ReferrerStruct[] memory)
     {
-        //this func will return all referrers sorting if needed will be done at frontend
-
-        //Note: referrerIds starts with 1
         ReferrerStruct[] memory topReferrers = new ReferrerStruct[](
             referrerCount
         );
@@ -98,6 +82,42 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         applications[_appId].hiringStatus = getHiringStateByUint(_state);
     }
 
+    struct ApplicationDetails {
+        string candidate_name;
+        string referrer_name;
+        string candidate_company;
+        Job.HiringStatus hiring_status;
+    }
+
+    function getApplicationsForJob(uint256 _jobId)
+        public
+        view
+        onlyRecruiter
+        returns (ApplicationDetails[] memory)
+    {
+        ApplicationDetails[]
+            memory applicationsForJob = new ApplicationDetails[](
+                jobToApplicationCount[_jobId]
+            );
+
+        uint256 counter;
+        for (uint256 i = 0; i < applications.length; i++) {
+            if (applications[i].jobId == _jobId) {
+                Application memory application = applications[i];
+
+                applicationsForJob[counter] = ApplicationDetails({
+                    candidate_name: candidates[application.candidateId].name,
+                    referrer_name: referrers[application.referrerId].name,
+                    candidate_company: candidates[application.candidateId]
+                        .currentCompany,
+                    hiring_status: application.hiringStatus
+                });
+                counter++;
+            }
+        }
+        return applicationsForJob;
+    }
+
     ////////////////////////////////////Referrer functions//////////////////////////////////////////////////////
     struct ReferralListStruct {
         string candidate_name;
@@ -142,7 +162,7 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         uint256 job_id
     ) public onlyReferrer {
         if (isCandidate(candidateAddress) == false) {
-            createCandidateAccount(
+            createCandidate(
                 candidateName,
                 candidateEmail,
                 candidateCompany,
@@ -173,19 +193,6 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
     }
 
     ////////////////////////////////////Candidate functions//////////////////////////////////////////////////////
-    function createCandidateAccount(
-        string memory _name,
-        string memory _email,
-        string memory _company,
-        address _candidateAddress
-    ) public {
-        //using _candidateAddress instead of msg.sender because the same function will be called by referrer
-        createCandidate(_name, _email, _company, _candidateAddress);
-    }
-
-    function getOpenJobs() public view returns (JobStructure[] memory) {
-        return Job.getAllOpenJobs();
-    }
 
     struct CandidateApplicationStruct {
         JobStructure job;

@@ -26,7 +26,7 @@ contract Candidate {
         string memory email,
         string memory company,
         address candidateAddress
-    ) internal {
+    ) public {
         candidateCount++;
         CandidateStruct memory candidate = CandidateStruct(
             name,

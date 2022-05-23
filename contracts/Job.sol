@@ -106,7 +106,6 @@ contract Job {
         );
         uint256 counter;
 
-        uint256 counter;
         for (uint256 i = 0; i < jobs_length; i++) {
             if (jobs[i].recruiter_address == recruiter_address) {
                 recruiter_jobs[counter] = jobs[i];
@@ -116,25 +115,7 @@ contract Job {
         return recruiter_jobs;
     }
 
-    function getApplicationsForJob(uint256 _jobId)
-        public
-        view
-        returns (Application[] memory)
-    {
-        Application[] memory applicationsForJob = new Application[](
-            jobToApplicationCount[_jobId]
-        );
-        uint256 counter;
-        for (uint256 i = 0; i < applications.length; i++) {
-            if (applications[i].jobId == _jobId) {
-                applicationsForJob[counter] = applications[i];
-                counter++;
-            }
-        }
-        return applicationsForJob;
-    }
-
-    function getAllOpenJobs() internal view returns (JobStructure[] memory) {
+    function getAllOpenJobs() public view returns (JobStructure[] memory) {
         JobStructure[] memory allOpenJobs = new JobStructure[](jobs_length);
         uint256 counter;
 

@@ -33,6 +33,7 @@ contract Job {
     struct JobStructure {
         string company_name;
         string company_logo;
+        string job_title;
         string details;
         string salary;
         string job_type; //remote or onsite
@@ -73,6 +74,7 @@ contract Job {
     function createJob(
         string memory company_name,
         string memory company_logo,
+        string memory job_title,
         string memory details,
         string memory salary,
         string memory job_type,
@@ -83,6 +85,7 @@ contract Job {
         jobs[jobs_length] = JobStructure({
             company_name: company_name,
             company_logo: company_logo,
+            job_title: job_title,
             details: details,
             salary: salary,
             job_type: job_type,

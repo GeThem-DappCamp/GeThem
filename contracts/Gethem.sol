@@ -12,6 +12,7 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
     function createJobByRecruiter(
         string memory company_name,
         string memory company_logo,
+        string memory job_title,
         string memory details,
         string memory salary,
         string memory job_type,
@@ -21,6 +22,7 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         uint256 job_id = Job.createJob(
             company_name,
             company_logo,
+            job_title,
             details,
             salary,
             job_type,

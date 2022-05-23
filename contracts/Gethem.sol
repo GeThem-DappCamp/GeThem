@@ -9,30 +9,21 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
     constructor() {}
 
     ////////////////////////////////////Recruiter functions//////////////////////////////////////////////////////
-    modifier onlyRecruiter() {
-        require(
-            Recruiter.isRecruiter(msg.sender),
-            "Error sender is not a recruiter"
-        );
-        _;
-    }
-
     function createJobByRecruiter(
         string memory company_name,
         string memory company_logo,
         string memory details,
         string memory salary,
         string memory job_type,
-        uint256 initTimestamp,
         uint256 amount
-    ) public onlyRecruiter {
+    ) public payable onlyRecruiter {
+        require(msg.value == amount);
         uint256 job_id = Job.createJob(
             company_name,
             company_logo,
             details,
             salary,
             job_type,
-            initTimestamp,
             amount
         );
         Recruiter.recruiterAddress_openJobsIds[msg.sender].push(job_id);
@@ -70,23 +61,44 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         return topReferrers;
     }
 
+    function closeJob(uint256 _jobId) public onlyRecruiter {
+        require(jobs[_jobId].recruiter_address == msg.sender);
+        jobs[_jobId].status = JobStatus.CLOSED;
+        if (jobs[_jobId].stake.account == address(this)) {
+            payable(msg.sender).transfer(jobs[_jobId].stake.amount);
+            jobs[_jobId].stake.account = msg.sender;
+        }
+    }
+
+    function changeCandidateState(
+        uint8 _state,
+        uint256 _appId,
+        uint256 _jobId
+    ) public onlyRecruiter {
+        require(jobs[_jobId].recruiter_address == msg.sender);
+        if (
+            _state > uint256(applications[_appId].hiringStatus) &&
+            applications[_appId].referrerId != 0
+        ) {
+            referrers[applications[_appId].referrerId].reputation_score++;
+        }
+        if (_state == uint256(HiringStatus.ACCEPTED)) {
+            if (
+                jobs[_jobId].stake.account == address(this) &&
+                applications[_appId].referrerId != 0
+            ) {
+                payable(referrerId_address[applications[_appId].referrerId])
+                    .transfer(jobs[_jobId].stake.amount);
+                jobs[_jobId].stake.account = referrerId_address[
+                    applications[_appId].referrerId
+                ];
+            }
+            closeJob(_jobId);
+        }
+        applications[_appId].hiringStatus = getHiringStateByUint(_state);
+    }
+
     ////////////////////////////////////Referrer functions//////////////////////////////////////////////////////
-    modifier onlyReferrer() {
-        require(
-            Referrer.isReferrer(msg.sender),
-            "Error sender is not a referrer"
-        );
-        _;
-    }
-
-    function createReferrerAccount(
-        string memory _name,
-        string memory _email,
-        string memory _community_names
-    ) public {
-        Referrer.createReferrer(_name, _email, _community_names);
-    }
-
     struct ReferralListStruct {
         string candidate_name;
         string referrer_name;
@@ -146,26 +158,21 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
             referrerId: referrer_id,
             jobId: job_id,
             hiringStatus: HiringStatus.WAITING,
-            skillsets: ""
+            skillsets: "",
+            currentPosition: "",
+            linkedinProfile: "",
+            yearsOfExperience: 0
         });
 
         Job.applications.push(newApplication);
-        uint256 applicationId = Job.applications.length;
+        uint256 applicationId = Job.applications.length - 1;
 
         candidateId_applicationIds[candidate_id].push(applicationId);
         referrerId_applicationIds[referrer_id].push(applicationId);
-    }
-
-    function getApplications() public view returns (Application[] memory) {
-        return Job.applications;
+        jobToApplicationCount[job_id]++;
     }
 
     ////////////////////////////////////Candidate functions//////////////////////////////////////////////////////
-    modifier onlyCandidate() {
-        require(isCandidate(msg.sender), "Error sender is not a candidate");
-        _;
-    }
-
     function createCandidateAccount(
         string memory _name,
         string memory _email,
@@ -180,6 +187,61 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         return Job.getAllOpenJobs();
     }
 
-    //updateSkillSets() for a particular application
-    //listOfApplications() for a candidate - similar to listOfReferrals() above
+    struct CandidateApplicationStruct {
+        JobStructure job;
+        Application application;
+    }
+
+    function seeAllAppliedOrReferredJobs()
+        public
+        view
+        onlyCandidate
+        returns (CandidateApplicationStruct[] memory)
+    {
+        uint256 candidate_id = address_candidateId[msg.sender];
+        uint256[] memory applicationIds = candidateId_applicationIds[
+            candidate_id
+        ];
+
+        CandidateApplicationStruct[]
+            memory applicationsToSend = new CandidateApplicationStruct[](
+                applicationIds.length
+            );
+
+        for (uint256 i = 0; i < applicationIds.length; i++) {
+            Application memory application = applications[i];
+
+            applicationsToSend[i] = CandidateApplicationStruct({
+                job: jobs[application.jobId],
+                application: application
+            });
+        }
+        return applicationsToSend;
+    }
+
+    function applyToJob(
+        uint256 _jobId,
+        uint256 yearsOfExperience,
+        string memory skillsets,
+        string memory currentPosition,
+        string memory linkedinProfile
+    ) public onlyCandidate {
+        uint256 candidateId = address_candidateId[msg.sender];
+        Application memory newApplication = Application({
+            candidateId: candidateId,
+            referrerId: 0,
+            jobId: _jobId,
+            hiringStatus: HiringStatus.WAITING,
+            skillsets: skillsets,
+            currentPosition: currentPosition,
+            linkedinProfile: linkedinProfile,
+            yearsOfExperience: yearsOfExperience
+        });
+
+        applications.push(newApplication);
+        uint256 applicationId = Job.applications.length - 1;
+
+        candidateId_applicationIds[candidateId].push(applicationId);
+        jobToApplicationCount[_jobId]++;
+    }
 }

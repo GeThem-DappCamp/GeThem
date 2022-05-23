@@ -1,5 +1,5 @@
 .job{
-    width: 60vw;
+    width: 67vw;
     background-color: #162844;
     border-radius: 12px;
     display: flex;
@@ -29,8 +29,8 @@
    }
   
     &-logo{
-       width: 78px;
-       height: 78px;
+       width: 86px;
+       height: 86px;
        border-radius: 50%;
        overflow: hidden
     }
@@ -39,7 +39,7 @@
        justify-content: space-between; 
        align-items: center;
        padding: 20px 0;
-       width: calc(60vw - 180px);
+       width: calc(67vw - 180px);
     }
     &-candidates{
        display: flex;
@@ -142,8 +142,8 @@
             width: calc(100vw - 400px);
         }
         &-logo{
-            width: 60px;
-            height: 60px;
+            width: 79px;
+            height: 79px;
          }
         &-description {
             flex-direction: column;
@@ -165,8 +165,8 @@
             width: calc(92vw - 150px);
         }
         &-logo{
-            width: 70px;
-            height: 70px;
+            width: 76px;
+            height: 76px;
          }
        
     }

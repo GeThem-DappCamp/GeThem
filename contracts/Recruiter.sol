@@ -2,7 +2,13 @@
 pragma solidity ^0.8.4;
 
 contract Recruiter {
-    address public account;
+     modifier onlyRecruiter() {
+        require(
+            Recruiter.isRecruiter(msg.sender),
+            "Error sender is not a recruiter"
+        );
+        _;
+    }
 
     struct RecruiterStruct {
         string name;

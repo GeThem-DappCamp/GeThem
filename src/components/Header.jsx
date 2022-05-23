@@ -5,7 +5,7 @@ import { connectWallet } from "../utils/common";
 import { useAccount, useContracts } from "../contexts";
 
 import Address from "./Address";
-import Balance from "./Balance";
+// import Balance from "./Balance";
 
 export default function Header() {
   const account = useAccount();
@@ -54,7 +54,7 @@ export default function Header() {
         {isMetamaskConnected && (
           <div className="flex gap-2">
             <Address address={account} />
-            <Balance />
+            {/* <Balance /> */}
           </div>
         )}
       </div>

@@ -1,4 +1,4 @@
-import { getAddress } from "../lib/addresses.helpers";
+import { getAddress, saveAddress } from "../lib/addresses.helpers";
 import { deployCamp } from "./deploy-camp";
 import { deployDappCampWarriors } from "./deploy-dapp-camp-warriors";
 import { deployStaking } from "./deploy-staking";
@@ -9,15 +9,13 @@ async function main() {
 
   console.log("Deploying contracts with the account:", deployer.address); 
 
-  const campContract = await deployCamp();
-  const dappCampWarriorsContract = await deployDappCampWarriors();
-  await deployStaking();
+  const gethem = await ethers.getContractFactory("GeThem");
+  const gethemContract = await gethem.deploy();
+  saveAddress("gethem", gethemContract.address);
 
-  await campContract.transferOwnership(getAddress("staking"));
-  await dappCampWarriorsContract.setBaseURI(
-    process.env.NFT_METADATA_BASE_URI ||
-      "https://gateway.pinata.cloud/ipfs/QmRLwGUPTTEfnfyzjqztJjq9NKJQY28ZVTf1qcEey3X3Rz"
-  );
+  console.log("The contract deployed to address:", gethemContract.address); 
+
+
 }
 
 main()

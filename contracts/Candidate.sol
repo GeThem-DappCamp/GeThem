@@ -1,10 +1,15 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity ^0.8.4;
 
 // import "hardhat/console.sol";
 
 contract Candidate {
+    modifier onlyCandidate() {
+        require(isCandidate(msg.sender), "Error sender is not a candidate");
+        _;
+    }
+
     struct CandidateStruct {
         string name;
         string email;
@@ -22,11 +27,6 @@ contract Candidate {
         string memory company,
         address candidateAddress
     ) internal {
-        // candidates.push(CandidateStruct(name, email, company, true));
-        // uint256 candidateId = candidates.length - 1;
-        // addressToCandidate[candidateAddress] = candidateId;
-        // candidateToAddress[candidateId] = candidateAddress;
-
         candidateCount++;
         CandidateStruct memory candidate = CandidateStruct(
             name,

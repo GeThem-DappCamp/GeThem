@@ -12,6 +12,19 @@ contract Job {
         REJECTED
     }
 
+    function getHiringStateByUint(uint256 id)
+        internal
+        pure
+        returns (HiringStatus)
+    {
+        if (id == 0) return HiringStatus.WAITING;
+        if (id == 1) return HiringStatus.ROUND1;
+        if (id == 2) return HiringStatus.ROUND2;
+        if (id == 3) return HiringStatus.ACCEPTED;
+        if (id == 4) return HiringStatus.REJECTED;
+        revert();
+    }
+
     enum JobStatus {
         OPEN,
         CLOSED
@@ -46,10 +59,14 @@ contract Job {
         uint256 jobId;
         HiringStatus hiringStatus;
         string skillsets;
+        string currentPosition;
+        string linkedinProfile;
+        uint256 yearsOfExperience;
     }
     Application[] applications;
     mapping(uint256 => uint256[]) referrerId_applicationIds;
     mapping(uint256 => uint256[]) candidateId_applicationIds;
+    mapping(uint256 => uint256) jobToApplicationCount;
 
     // mapping(uint256 => mapping(uint256 => HiringStatus)) jobId_cadidateId_interviewStatus;
 
@@ -59,9 +76,8 @@ contract Job {
         string memory details,
         string memory salary,
         string memory job_type,
-        uint256 initTimestamp,
         uint256 amount
-    ) public payable returns (uint256) {
+    ) internal returns (uint256) {
         Stake memory stake = Stake(address(this), amount, block.timestamp);
 
         jobs[jobs_length] = JobStructure({
@@ -70,7 +86,7 @@ contract Job {
             details: details,
             salary: salary,
             job_type: job_type,
-            initTimestamp: initTimestamp,
+            initTimestamp: block.timestamp,
             status: JobStatus.OPEN,
             stake: stake,
             recruiter_address: msg.sender
@@ -88,6 +104,7 @@ contract Job {
         JobStructure[] memory recruiter_jobs = new JobStructure[](
             recruiterToJobCount[msg.sender]
         );
+        uint256 counter;
 
         uint256 counter;
         for (uint256 i = 0; i < jobs_length; i++) {
@@ -97,6 +114,24 @@ contract Job {
             }
         }
         return recruiter_jobs;
+    }
+
+    function getApplicationsForJob(uint256 _jobId)
+        public
+        view
+        returns (Application[] memory)
+    {
+        Application[] memory applicationsForJob = new Application[](
+            jobToApplicationCount[_jobId]
+        );
+        uint256 counter;
+        for (uint256 i = 0; i < applications.length; i++) {
+            if (applications[i].jobId == _jobId) {
+                applicationsForJob[counter] = applications[i];
+                counter++;
+            }
+        }
+        return applicationsForJob;
     }
 
     function getAllOpenJobs() internal view returns (JobStructure[] memory) {

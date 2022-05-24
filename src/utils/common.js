@@ -15,7 +15,7 @@ export const networkName = "rinkeby";
 
 export const getEthereumObject = () => {
   const { ethereum } = window;
-  console.log("=====getEthereumObject", ethereum.networkVersion, networkId);
+  console.log("getEthereumObject", ethereum.networkVersion, networkId);
   if (!ethereum) return null;
 
   // if (ethereum.networkVersion != networkId) {
@@ -43,7 +43,7 @@ export const setupEthereumEventListeners = (ethereum) => {
 
 export const connectWallet = async () => {
   const { ethereum } = window;
-  console.log("======ethereum", ethereum);
+  console.log("ethereum", ethereum);
   if (!ethereum) return null;
 
   await ethereum.request({ method: "eth_requestAccounts" });

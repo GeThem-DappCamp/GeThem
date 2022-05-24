@@ -3,7 +3,6 @@ import { useAccount, useContracts } from "../../contexts";
 import Menu from "../../components/Menu";
 import Job from "../../components/Job";
 import plus from "../../assets/images/plus.svg";
-import user from "../../assets/images/user.svg";
 import Image from "next/image";
 import Avatar from "../../components/Avatar";
 import NewJobModal from "../../components/NewJobModal";
@@ -11,16 +10,15 @@ import { ethers } from "ethers";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { useRouter } from "next/router";
-import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en.json";
-TimeAgo.addDefaultLocale(en);
-const timeAgo = new TimeAgo("en-US");
+import AccountModal from "../../components/accountModal";
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 export default function Recruiter() {
   const [modalShow, setModalShow] = useState(false);
+  const [accountShow, setAccountShow] = useState(false);
   const [jobs, setJobs] = useState([]);
   const [error, setError] = useState("");
   const [loader, setLoader] = useState(false);
@@ -28,13 +26,16 @@ export default function Recruiter() {
   const account = useAccount();
   const { gethemContract } = useContracts();
   const router = useRouter();
+  const [recruiter_name, setName] = useState("");
+  const [recruiter_email, setEmail] = useState("");
 
   const getJobs = async (address) => {
     try {
-      const recruiter_jobs = await gethemContract.getJobsByRecruiterAddress(
-        address
-      );
-      setJobs(recruiter_jobs);
+      const isRecruiter = await gethemContract.isRecruiter(address);
+      if (isRecruiter) {
+        const recruiter_jobs = await gethemContract.getJobsByAddress(address);
+        setJobs(recruiter_jobs);
+      }
     } catch (e) {
       console.log("Couldnt't load jobs" + e);
       setError("Couldnt't load jobs " + e.message);
@@ -42,50 +43,109 @@ export default function Recruiter() {
     }
   };
 
+  const handleSaveJob = async (
+    name,
+    logo,
+    position,
+    details,
+    salary,
+    type,
+    amount
+  ) => {
+    setLoader(true);
+
+    //to consume isRecruiter function only when the jobs list is empty
+    if (jobs.length == 0) {
+      const isRecruiter = await gethemContract.isRecruiter(account);
+      if (!isRecruiter) {
+        await gethemContract.createRecruiterAccount(account, "", "");
+      } else {
+        await createJob(name, logo, position, details, salary, type, amount);
+      }
+    } else {
+      await createJob(name, logo, position, details, salary, type, amount);
+    }
+    setLoader(false);
+  };
+
   const createJob = async (
     company_name,
     logo,
+    title,
     details,
     salary,
     job_type,
-    initTimestamp,
     amount
   ) => {
-    setError(true);
     try {
       setError("");
       const options = {
         value: ethers.utils.formatUnits(amount.toString(), "wei"),
       };
 
-      const transaction = await gethemContract.createJob(
+      const transaction = await gethemContract.createJobByRecruiter(
         company_name,
         logo,
+        title,
         details,
         salary,
         job_type,
-        initTimestamp,
         amount,
         options
       );
       await transaction.wait();
 
-      setTimeout(async () => {
-        await getJobs(account);
-        setModalShow(false);
-      }, 2000);
+      // setTimeout(async () => {
+      await getJobs(account);
+      setModalShow(false);
+      // }, 2000);
     } catch (e) {
-      console.log("Couldnt't create a job" + e.message);
+      console.log("Couldnt't create a job " + e.message);
       await setError("Couldnt't create a job " + e.message);
       setModalShow(false);
 
       setOpenSnack(true);
     }
-    setError(false);
+    setLoader(false);
   };
 
+  const editAccount = async (name, email) => {
+    try {
+      setLoader(true);
+
+      const isRecruiter = await gethemContract.isRecruiter(account);
+      var transaction;
+      if (isRecruiter) {
+        transaction = await gethemContract.editRecruiter(name, email);
+      } else {
+        transaction = await gethemContract.createRecruiterAccount(
+          account,
+          name,
+          email
+        );
+      }
+      await transaction.wait();
+      getRecruiterInfo(account);
+    } catch (e) {
+      await setError("Couldnt't modify account " + e.message);
+    }
+    setLoader(false);
+    setAccountShow(false);
+  };
+  const getRecruiterInfo = async (address) => {
+    try {
+      const recruiterId = await gethemContract.address_recruiterId(address);
+      const recruiter = await gethemContract.recruiters(recruiterId);
+      setName(recruiter[0]);
+      setEmail(recruiter[1]);
+    } catch (error) {
+      console.log("error", error.message);
+    }
+  };
   useEffect(() => {
+    console.log("account", account);
     if (account) {
+      getRecruiterInfo(account);
       getJobs(account);
     } else router.push(`/`);
   }, [account, jobs.length]);
@@ -96,7 +156,7 @@ export default function Recruiter() {
         <Menu index={0} />
         <div className="home-body">
           <div className="home-header right">
-            <Avatar image={user} />
+            <Avatar onClick={() => setAccountShow(true)} />
           </div>
           <div className="home-header">
             <h1>Open Jobs</h1>
@@ -105,21 +165,23 @@ export default function Recruiter() {
             </button>
           </div>
           {jobs.map((item, index) => {
-            const secs = item[5].toString();
-            const createdAt = timeAgo.format(new Date(parseInt(secs)));
-
+            const secs = item[6].toString();
             return (
               <Job
                 jobId={index + 1}
                 name={item[0]}
                 logo={item[1]}
                 position={item[2]}
-                salary={item[3]}
-                type={item[4]}
-                time={createdAt}
-                status={item[6].toString()}
-                amount={item[7].toString()}
-                candidatesIds={item[8]}
+                details={item[3]}
+                salary={item[4]}
+                type={item[5]}
+                time={parseInt(secs) * 1000}
+                status={item[7].toString()}
+                amount={item[8].toString()}
+                candidatesIds={[{}, {}, {}, {}]}
+                recruiter_address={item[9]}
+                recruiter_name={recruiter_name}
+                recruiter_email={recruiter_email}
               />
             );
           })}
@@ -139,25 +201,40 @@ export default function Recruiter() {
             {error}
           </Alert>
         </Snackbar>
-
-        {/* <MuiAlert
-            elevation={6}
-            variant="filled"
-            onClose={() => setOpenSnack(false)}
-            severity="error"
-            sx={{ width: "100%" }}
-          >
-            {error}
-          </MuiAlert> */}
         <NewJobModal
           show={modalShow}
           onHide={() => setModalShow(false)}
-          onSave={(name, logo, position, salary, type, amount) => {
-            const time = Date.now();
-            console.log("time now ========", time);
-
-            createJob(name, logo, position, salary, type, time, amount);
+          onSave={(
+            company_name,
+            logo,
+            title,
+            details,
+            salary,
+            job_type,
+            amount
+          ) =>
+            handleSaveJob(
+              company_name,
+              logo,
+              title,
+              details,
+              salary,
+              job_type,
+              amount
+            )
+          }
+          loading={loader}
+        />
+        <AccountModal
+          current_email={recruiter_email}
+          current_name={recruiter_name}
+          address={account}
+          show={accountShow}
+          onHide={() => setAccountShow(false)}
+          onSave={(name_rec, email_rec) => {
+            editAccount(name_rec, email_rec);
           }}
+          loading={loader}
         />
       </div>
     </div>

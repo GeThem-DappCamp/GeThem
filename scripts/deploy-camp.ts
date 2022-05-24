@@ -3,7 +3,6 @@ import { getCamp } from "../lib/deploy.helpers";
 
 export async function deployCamp() {
   const campContract = await getCamp();
-  console.log("=========>campContract.address", campContract.address);
   saveAddress("camp", campContract.address);
 
   return campContract;

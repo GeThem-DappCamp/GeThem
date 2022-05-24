@@ -2,7 +2,7 @@
 pragma solidity ^0.8.4;
 
 contract Recruiter {
-     modifier onlyRecruiter() {
+    modifier onlyRecruiter() {
         require(
             Recruiter.isRecruiter(msg.sender),
             "Error sender is not a recruiter"

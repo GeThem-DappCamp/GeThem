@@ -5,8 +5,7 @@ pragma solidity ^0.8.4;
 // import "hardhat/console.sol";
 
 contract Referrer {
-
-      modifier onlyReferrer() {
+    modifier onlyReferrer() {
         require(
             Referrer.isReferrer(msg.sender),
             "Error sender is not a referrer"
@@ -14,7 +13,7 @@ contract Referrer {
         _;
     }
 
-    function checkReputationScore() public view onlyReferrer returns (uint) {
+    function checkReputationScore() public view onlyReferrer returns (uint256) {
         return referrers[address_referrerId[msg.sender]].reputation_score;
     }
 
@@ -30,10 +29,9 @@ contract Referrer {
 
     mapping(uint256 => ReferrerStruct) public referrers;
     mapping(address => uint256) public address_referrerId;
-    mapping(uint => address) public referrerId_address;
+    mapping(uint256 => address) public referrerId_address;
 
     uint256 public referrerCount;
-
 
     function createReferrer(
         string memory _name,

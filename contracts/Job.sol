@@ -12,15 +12,18 @@ contract Job {
         REJECTED
     }
 
-     function getHiringStateByUint(uint id) internal pure returns (HiringStatus) {
-       if(id == 0) return HiringStatus.WAITING;
-       if(id == 1) return HiringStatus.ROUND1;
-       if(id == 2) return HiringStatus.ROUND2;
-       if(id == 3) return HiringStatus.ACCEPTED;
-       if(id == 4) return HiringStatus.REJECTED;
-       revert();
-   }
-
+    function getHiringStateByUint(uint256 id)
+        internal
+        pure
+        returns (HiringStatus)
+    {
+        if (id == 0) return HiringStatus.WAITING;
+        if (id == 1) return HiringStatus.ROUND1;
+        if (id == 2) return HiringStatus.ROUND2;
+        if (id == 3) return HiringStatus.ACCEPTED;
+        if (id == 4) return HiringStatus.REJECTED;
+        revert();
+    }
 
     enum JobStatus {
         OPEN,
@@ -59,12 +62,12 @@ contract Job {
         string skillsets;
         string currentPosition;
         string linkedinProfile;
-        uint yearsOfExperience;
+        uint256 yearsOfExperience;
     }
     Application[] applications;
     mapping(uint256 => uint256[]) referrerId_applicationIds;
     mapping(uint256 => uint256[]) candidateId_applicationIds;
-    mapping(uint => uint) jobToApplicationCount;
+    mapping(uint256 => uint256) jobToApplicationCount;
 
     // mapping(uint256 => mapping(uint256 => HiringStatus)) jobId_cadidateId_interviewStatus;
 
@@ -115,21 +118,9 @@ contract Job {
         return recruiter_jobs;
     }
 
-    function getApplicationsForJob(uint _jobId) public view returns (Application[] memory) {
-        Application[] memory applicationsForJob = new Application[](jobToApplicationCount[_jobId]);
-        uint256 counter;
-        for (uint256 i = 0; i < applications.length; i++) {
-            if (applications[i].jobId == _jobId) {
-                applicationsForJob[counter] = applications[i];
-                counter++;
-            }
-        }
-        return applicationsForJob;
-    }
-
-    function getAllOpenJobs() internal view returns (JobStructure[] memory) {
+    function getAllOpenJobs() public view returns (JobStructure[] memory) {
         JobStructure[] memory allOpenJobs = new JobStructure[](jobs_length);
-        uint256 counter = 0;
+        uint256 counter;
 
         for (uint256 i = 0; i < jobs_length; i++) {
             if (jobs[i].status == JobStatus.OPEN) {

@@ -38,6 +38,12 @@ contract Candidate {
         address_candidateId[candidateAddress] = candidateCount;
     }
 
+     function editCandidate(string memory name, string memory email, string memory currentCompany) public onlyCandidate {
+        candidates[address_candidateId[msg.sender]].name = name;
+        candidates[address_candidateId[msg.sender]].email = email;
+        candidates[address_candidateId[msg.sender]].currentCompany = currentCompany;
+    }
+
     function isCandidate(address _candidateAddress)
         internal
         view

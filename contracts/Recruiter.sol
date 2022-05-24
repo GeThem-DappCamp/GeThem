@@ -31,6 +31,11 @@ contract Recruiter {
         address_recruiterId[recruiter_address] = recruiterCount;
     }
 
+    function editRecruiter(string memory name, string memory email) public onlyRecruiter {
+        recruiters[address_recruiterId[msg.sender]].name = name;
+        recruiters[address_recruiterId[msg.sender]].email = email;
+    }
+
     function isRecruiter(address recruiter_address) public view returns (bool) {
         uint256 recruiterId = address_recruiterId[recruiter_address];
         if (recruiterId != 0 && recruiters[recruiterId].exist) {

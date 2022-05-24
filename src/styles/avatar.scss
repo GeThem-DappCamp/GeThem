@@ -1,12 +1,21 @@
 .user{
-    
-    img{
-        background-color: #FF5D56;
-        width: 56px;
-        height: 56px;
-        border-top-left-radius: 20px;
-        border-bottom-left-radius: 5px;
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    .paper{
+        background-color: #FF5D56 !important;
+        width: 56px!important;
+        height: 56px!important;
+        border-top-left-radius: 20px!important;
+        border-bottom-left-radius: 5px!important;
+        border-top-right-radius: 5px!important;
+        border-bottom-right-radius: 20px!important;
+    }
+    .name{
+        color: black;
+        font-size: 14px;
+        font-weight: 700;
+        position: absolute;
+        top:18px;
+        left: 8px;
     }
 }

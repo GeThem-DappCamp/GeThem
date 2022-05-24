@@ -88,6 +88,8 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         string candidate_name;
         string referrer_name;
         string candidate_company;
+        uint applicationId;
+        uint jobId;
         Job.HiringStatus hiring_status;
     }
 
@@ -112,6 +114,8 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
                     referrer_name: referrers[application.referrerId].name,
                     candidate_company: candidates[application.candidateId]
                         .currentCompany,
+                    applicationId: i,
+                    jobId: _jobId,
                     hiring_status: application.hiringStatus
                 });
                 counter++;
@@ -121,6 +125,7 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
     }
 
     ////////////////////////////////////Referrer functions//////////////////////////////////////////////////////
+
     struct ReferralListStruct {
         string candidate_name;
         string referrer_name;
@@ -200,7 +205,7 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         JobStructure job;
         Application application;
     }
-
+    
     function seeAllAppliedOrReferredJobs()
         public
         view

@@ -45,7 +45,6 @@ contract Job {
 
     mapping(uint256 => JobStructure) public jobs;
     uint256 public jobs_length;
-    //ask: is the below mapping required since we have recruiterAddress_openJobsIds in referrer.sol
     mapping(address => uint256) public recruiterToJobCount;
 
     struct Stake {
@@ -99,19 +98,27 @@ contract Job {
         return jobs_length - 1;
     }
 
+    struct JobFEStruct{
+        uint jobId;
+        JobStructure jobStructure;
+    }
+
     function getJobsByAddress(address recruiter_address)
         public
         view
-        returns (JobStructure[] memory)
+        returns (JobFEStruct[] memory)
     {
-        JobStructure[] memory recruiter_jobs = new JobStructure[](
+        JobFEStruct[] memory recruiter_jobs = new JobFEStruct[](
             recruiterToJobCount[msg.sender]
         );
         uint256 counter;
 
         for (uint256 i = 0; i < jobs_length; i++) {
             if (jobs[i].recruiter_address == recruiter_address) {
-                recruiter_jobs[counter] = jobs[i];
+                recruiter_jobs[counter] = JobFEStruct({
+                    jobId : i,
+                    jobStructure : jobs[i]
+                });
                 counter++;
             }
         }

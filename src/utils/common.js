@@ -35,7 +35,7 @@ export const setupEthereumEventListeners = (ethereum) => {
   });
 
   window.ethereum.on("accountsChanged", async (accounts) => {
-    // window.location.reload();
+    window.location.reload();
   });
 
   return ethereum;
@@ -47,6 +47,7 @@ export const connectWallet = async () => {
   if (!ethereum) return null;
 
   await ethereum.request({ method: "eth_requestAccounts" });
+
   // location.reload();
 };
 
@@ -59,6 +60,8 @@ export const getCurrentAccount = async () => {
     return null;
   }
   const account = accounts[0];
+  console.log("getCurrentAccount DONE======>", account);
+
   return account;
 };
 

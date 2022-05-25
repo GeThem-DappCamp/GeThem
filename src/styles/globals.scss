@@ -64,6 +64,7 @@ body{
     justify-content: center;
     align-content: center;
     padding-top: 20vh;
+    position: relative;
 
     &-card{
         background-color: #162844;
@@ -74,7 +75,6 @@ body{
         align-items: center;
         flex-direction: column;
         cursor: pointer;
-       
     }
     &-card img{
         width: 150px !important;
@@ -91,11 +91,23 @@ body{
         margin-top: 50px !important;
 
     }
+    &-loader{
+        position: absolute;
+        z-index: 3000;
+        top: 0;
+        background-color: #0d192b8c;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
 }
 .MuiDrawer-paperAnchorDockedLeft{
     border-right-width: 0 !important;
 }
-.makeStyles-toolbar-28{
+div[class^="makeStyles-toolbar"] {
     min-height: 0 !important;
 }
 .right{

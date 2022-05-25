@@ -33,7 +33,39 @@ export default function Recruiter() {
     try {
       const isRecruiter = await gethemContract.isRecruiter(address);
       if (isRecruiter) {
-        const recruiter_jobs = await gethemContract.getJobsByAddress(address);
+        const result = await gethemContract.getJobsByAddress(address);
+        // console.log("###### result", result);
+
+        var recruiter_jobs = [];
+        for (var i = 0; i < result.length; i++) {
+          const job_id = parseInt(result[i]["jobId"].toString());
+          // console.log("###### job_id", job_id);
+
+          const item = result[i]["jobStructure"];
+          const applications = await gethemContract.getApplicationsForJob(
+            job_id
+          );
+          console.log("###### applications", applications);
+
+          const secs = item[6].toString();
+
+          recruiter_jobs.push({
+            jobId: job_id,
+            name: item[0],
+            logo: item[1],
+            position: item[2],
+            details: item[3],
+            salary: item[4],
+            type: item[5],
+            time: parseInt(secs) * 1000,
+            status: item[7].toString(),
+            amount: item[8][1] ? item[8][1].toString() : "10",
+            candidates: applications,
+            recruiter_address: item[9],
+          });
+        }
+        console.log("###### recruiter_jobs", recruiter_jobs);
+
         setJobs(recruiter_jobs);
       }
     } catch (e) {
@@ -58,10 +90,16 @@ export default function Recruiter() {
     if (jobs.length == 0) {
       const isRecruiter = await gethemContract.isRecruiter(account);
       if (!isRecruiter) {
-        await gethemContract.createRecruiterAccount(account, "", "");
-      } else {
-        await createJob(name, logo, position, details, salary, type, amount);
+        console.log("##### create recruiter");
+        const transaction = await gethemContract.createRecruiterAccount(
+          account,
+          "",
+          ""
+        );
+        await transaction.wait();
       }
+
+      await createJob(name, logo, position, details, salary, type, amount);
     } else {
       await createJob(name, logo, position, details, salary, type, amount);
     }
@@ -78,6 +116,8 @@ export default function Recruiter() {
     amount
   ) => {
     try {
+      console.log("##### create job");
+
       setError("");
       const options = {
         value: ethers.utils.formatUnits(amount.toString(), "wei"),
@@ -142,6 +182,7 @@ export default function Recruiter() {
       console.log("error", error.message);
     }
   };
+
   useEffect(() => {
     console.log("account", account);
     if (account) {
@@ -165,25 +206,7 @@ export default function Recruiter() {
             </button>
           </div>
           {jobs.map((item, index) => {
-            const secs = item[6].toString();
-            return (
-              <Job
-                jobId={index + 1}
-                name={item[0]}
-                logo={item[1]}
-                position={item[2]}
-                details={item[3]}
-                salary={item[4]}
-                type={item[5]}
-                time={parseInt(secs) * 1000}
-                status={item[7].toString()}
-                amount={item[8].toString()}
-                candidatesIds={[{}, {}, {}, {}]}
-                recruiter_address={item[9]}
-                recruiter_name={recruiter_name}
-                recruiter_email={recruiter_email}
-              />
-            );
+            return <Job data={item} />;
           })}
         </div>
         <Snackbar
@@ -203,7 +226,10 @@ export default function Recruiter() {
         </Snackbar>
         <NewJobModal
           show={modalShow}
-          onHide={() => setModalShow(false)}
+          onHide={() => {
+            setLoader(false);
+            setModalShow(false);
+          }}
           onSave={(
             company_name,
             logo,
@@ -230,7 +256,10 @@ export default function Recruiter() {
           current_name={recruiter_name}
           address={account}
           show={accountShow}
-          onHide={() => setAccountShow(false)}
+          onHide={() => {
+            setLoader(false);
+            setAccountShow(false);
+          }}
           onSave={(name_rec, email_rec) => {
             editAccount(name_rec, email_rec);
           }}

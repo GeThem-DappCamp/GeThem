@@ -96,7 +96,16 @@ function MyApp({ Component, pageProps }) {
           draggable
           pauseOnHover
         />
-        {getLayout(<Component {...pageProps} />)}
+        {getLayout(
+          <Component
+            {...pageProps}
+            onConnect={async (callback) => {
+              const currentAccount = await getCurrentAccount();
+              setAccount(currentAccount);
+              if (callback) callback(currentAccount);
+            }}
+          />
+        )}
       </ContractsContext.Provider>
     </AccountContext.Provider>
   );

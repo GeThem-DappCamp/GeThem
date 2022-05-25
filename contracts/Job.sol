@@ -109,7 +109,7 @@ contract Job {
         returns (JobFEStruct[] memory)
     {
         JobFEStruct[] memory recruiter_jobs = new JobFEStruct[](
-            recruiterToJobCount[msg.sender]
+            recruiterToJobCount[recruiter_address]
         );
         uint256 counter;
 

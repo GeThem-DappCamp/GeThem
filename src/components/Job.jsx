@@ -13,22 +13,23 @@ import en from "javascript-time-ago/locale/en.json";
 
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo("en-US");
-export default function Job({
-  jobId,
-  name,
-  logo,
-  position,
-  details,
-  salary,
-  type,
-  time,
-  status,
-  amount,
-  candidatesIds,
-  recruiter_address,
-  recruiter_name,
-  recruiter_email,
-}) {
+export default function Job({ data }) {
+  const {
+    jobId,
+    name,
+    logo,
+    position,
+    details,
+    salary,
+    type,
+    time,
+    status,
+    amount,
+    candidatesIds,
+    recruiter_address,
+    recruiter_name,
+    recruiter_email,
+  } = data;
   return (
     <Link
       href={{

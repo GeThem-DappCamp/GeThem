@@ -31,19 +31,22 @@ export default function Recruiter() {
 
   const getJobs = async (address) => {
     try {
-      console.log("###### account", account);
-
       const isRecruiter = await gethemContract.isRecruiter(address);
       if (isRecruiter) {
         const result = await gethemContract.getJobsByAddress(address);
-        const jobIds = Object.keys(result);
+        // console.log("###### result", result);
+
         var recruiter_jobs = [];
-        for (var i = 0; i < jobIds.length; i++) {
-          const job_id = parseInt(jobIds[i]);
+        for (var i = 0; i < result.length; i++) {
+          const job_id = parseInt(result[i]["jobId"].toString());
+          // console.log("###### job_id", job_id);
+
+          const item = result[i]["jobStructure"];
           const applications = await gethemContract.getApplicationsForJob(
             job_id
           );
-          const item = result[job_id];
+          console.log("###### applications", applications);
+
           const secs = item[6].toString();
 
           recruiter_jobs.push({
@@ -57,7 +60,7 @@ export default function Recruiter() {
             time: parseInt(secs) * 1000,
             status: item[7].toString(),
             amount: item[8][1] ? item[8][1].toString() : "10",
-            candidatesIds: applications,
+            candidates: applications,
             recruiter_address: item[9],
           });
         }
@@ -223,7 +226,10 @@ export default function Recruiter() {
         </Snackbar>
         <NewJobModal
           show={modalShow}
-          onHide={() => setModalShow(false)}
+          onHide={() => {
+            setLoader(false);
+            setModalShow(false);
+          }}
           onSave={(
             company_name,
             logo,
@@ -250,7 +256,10 @@ export default function Recruiter() {
           current_name={recruiter_name}
           address={account}
           show={accountShow}
-          onHide={() => setAccountShow(false)}
+          onHide={() => {
+            setLoader(false);
+            setAccountShow(false);
+          }}
           onSave={(name_rec, email_rec) => {
             editAccount(name_rec, email_rec);
           }}

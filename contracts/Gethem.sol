@@ -188,7 +188,8 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
             skillsets: "",
             currentPosition: "",
             linkedinProfile: "",
-            yearsOfExperience: 0
+            yearsOfExperience: 0,
+            initTimestamp: block.timestamp
         });
 
         Job.applications.push(newApplication);
@@ -249,7 +250,8 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
             skillsets: skillsets,
             currentPosition: currentPosition,
             linkedinProfile: linkedinProfile,
-            yearsOfExperience: yearsOfExperience
+            yearsOfExperience: yearsOfExperience,
+            initTimestamp: block.timestamp
         });
 
         applications.push(newApplication);

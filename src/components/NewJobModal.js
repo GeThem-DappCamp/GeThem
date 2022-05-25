@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Form, Modal, Row, Col } from "react-bootstrap";
+import { CircularProgress } from "@mui/material";
 
 export default function NewJobModal(props) {
   const [error, setError] = useState("");
   const [name, setName] = useState("");
   const [logo, setLogo] = useState("");
   const [position, setPosition] = useState("");
+  const [details, setDetails] = useState("");
   const [salary, setSalary] = useState("");
   const [type, setType] = useState("");
   const [amount, setAmount] = useState(10);
@@ -42,16 +44,35 @@ export default function NewJobModal(props) {
             required
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-          <Form.Label className="jobModal-label">Position</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder=""
-            value={position}
-            onChange={(e) => setPosition(e.target.value)}
-            required
-          />
-        </Form.Group>
+        <Row>
+          <Col>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label className="jobModal-label">Position</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder=""
+                value={position}
+                onChange={(e) => setPosition(e.target.value)}
+                required
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label className="jobModal-label">
+                Stake Amount (Wei)
+              </Form.Label>
+              <Form.Control
+                min={10}
+                type="number"
+                placeholder=""
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                required
+              />
+            </Form.Group>
+          </Col>
+        </Row>
         <Row>
           <Col>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
@@ -78,14 +99,14 @@ export default function NewJobModal(props) {
             </Form.Group>
           </Col>
         </Row>
-        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-          <Form.Label className="jobModal-label">Stake Amount (Wei)</Form.Label>
+        <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+          <Form.Label className="jobModal-label">Details</Form.Label>
           <Form.Control
-            min={10}
-            type="number"
+            as="textarea"
+            rows={2}
             placeholder=""
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            value={details}
+            onChange={(e) => setDetails(e.target.value)}
             required
           />
         </Form.Group>
@@ -103,18 +124,28 @@ export default function NewJobModal(props) {
               name != "" &&
               logo != "" &&
               position != "" &&
+              details != "" &&
               salary != "" &&
               type != "" &&
               amount != ""
             ) {
-              props.onSave(name, logo, position, salary, type, amount);
+              props.onSave(name, logo, position, details, salary, type, amount);
             } else {
               setError("All fields are required");
             }
           }}
-          style={{ backgroundColor: "#FF5D56", border: "none" }}
+          style={{
+            backgroundColor: "#FF5D56",
+            border: "none",
+            width: "80px",
+            height: "40px",
+          }}
         >
-          Save
+          {props.loading ? (
+            <CircularProgress color="inherit" size={"25px"} />
+          ) : (
+            "Save"
+          )}
         </Button>
       </Modal.Footer>
     </Modal>

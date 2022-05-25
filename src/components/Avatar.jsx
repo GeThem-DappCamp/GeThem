@@ -1,9 +1,18 @@
 import Image from "next/image";
+import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import { useAccount } from "../contexts";
 
-export default function Avatar({ image }) {
+export default function Avatar({ onClick }) {
+  const account = useAccount();
+
   return (
-    <div className="user">
-      <Image src={image} alt="" height={56} width={56} />
-    </div>
+    <>
+      {account && (
+        <div className="user" onClick={onClick}>
+          <Jazzicon diameter={56} seed={jsNumberForAddress(account)} />
+          <p className="name">{"0x.." + account.slice(account.length - 3)}</p>
+        </div>
+      )}
+    </>
   );
 }

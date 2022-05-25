@@ -49,38 +49,45 @@ export default function Candidates({ data }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map(({ image, name, referrer, company, status }) => (
-            <StyledTableRow>
-              <StyledTableCell component="th" scope="row">
-                <Avatar className="candidate-avatar" src={image} />
-              </StyledTableCell>
-              <StyledTableCell component="th" scope="row">
-                {name}
-              </StyledTableCell>
-              <StyledTableCell>{referrer}</StyledTableCell>
-              <StyledTableCell>{company}</StyledTableCell>
-              <StyledTableCell>
-                <div className={"status " + status}>
-                  <p>{status}</p>
-                </div>
-              </StyledTableCell>
-              <StyledTableCell>
-                <Select
-                  labelId="demo-simple-select-filled-label"
-                  id="demo-simple-select-filled"
-                  value={status}
-                  // onChange={handleChange}
-                  className="candidate-dropdown"
-                >
-                  <MenuItem value="Waiting">Pending</MenuItem>
-                  <MenuItem value={"Round 1"}>Round 1</MenuItem>
-                  <MenuItem value={"Round 2"}>Round 2</MenuItem>
-                  <MenuItem value={"Accepted"}>Accept</MenuItem>
-                  <MenuItem value={"Rejected"}>Reject</MenuItem>
-                </Select>
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
+          {data.length == 0 ? (
+            <p>No candidates</p>
+          ) : (
+            data.map(({ image, name, referrer, company, status }) => (
+              <StyledTableRow>
+                <StyledTableCell component="th" scope="row">
+                  <Avatar
+                    className="candidate-avatar"
+                    src={"https://i.pravatar.cc/150?u=a042581f4e29026704d"}
+                  />
+                </StyledTableCell>
+                <StyledTableCell component="th" scope="row">
+                  {name}
+                </StyledTableCell>
+                <StyledTableCell>{referrer}</StyledTableCell>
+                <StyledTableCell>{company}</StyledTableCell>
+                <StyledTableCell>
+                  <div className={"status " + status}>
+                    <p>{status}</p>
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <Select
+                    labelId="demo-simple-select-filled-label"
+                    id="demo-simple-select-filled"
+                    value={status}
+                    // onChange={handleChange}
+                    className="candidate-dropdown"
+                  >
+                    <MenuItem value="Waiting">Pending</MenuItem>
+                    <MenuItem value={"Round 1"}>Round 1</MenuItem>
+                    <MenuItem value={"Round 2"}>Round 2</MenuItem>
+                    <MenuItem value={"Accepted"}>Accept</MenuItem>
+                    <MenuItem value={"Rejected"}>Reject</MenuItem>
+                  </Select>
+                </StyledTableCell>
+              </StyledTableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </TableContainer>

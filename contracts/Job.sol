@@ -38,9 +38,9 @@ contract Job {
         string salary;
         string job_type; //remote or onsite
         uint256 initTimestamp;
+        address recruiter_address;
         JobStatus status; //closed or open
         Stake stake;
-        address recruiter_address;
     }
 
     mapping(uint256 => JobStructure) public jobs;
@@ -57,11 +57,12 @@ contract Job {
         uint256 candidateId;
         uint256 referrerId;
         uint256 jobId;
-        HiringStatus hiringStatus;
+        uint256 yearsOfExperience;
+        uint256 initTimestamp;
         string skillsets;
         string currentPosition;
         string linkedinProfile;
-        uint256 yearsOfExperience;
+        HiringStatus hiringStatus;
     }
     Application[] applications;
     mapping(uint256 => uint256[]) referrerId_applicationIds;
@@ -125,13 +126,16 @@ contract Job {
         return recruiter_jobs;
     }
 
-    function getAllOpenJobs() public view returns (JobStructure[] memory) {
-        JobStructure[] memory allOpenJobs = new JobStructure[](jobs_length);
+    function getAllOpenJobs() public view returns (JobFEStruct[] memory) {
+        JobFEStruct[] memory allOpenJobs = new JobFEStruct[](jobs_length);
         uint256 counter;
 
         for (uint256 i = 0; i < jobs_length; i++) {
             if (jobs[i].status == JobStatus.OPEN) {
-                allOpenJobs[counter] = jobs[i];
+                allOpenJobs[counter] = JobFEStruct({
+                    jobId : i,
+                    jobStructure : jobs[i]
+                });
                 counter++;
             }
         }

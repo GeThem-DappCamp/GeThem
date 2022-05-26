@@ -21,21 +21,9 @@ export default function JobDetails() {
     const data = router.query;
     if (data) {
       setJob(data);
-      getCandidates(data.jobId);
+      setCandidates(JSON.parse(data.applications));
     }
   }, []);
-
-  const getCandidates = async (jobId) => {
-    try {
-      const candidateCount = await gethemContract.address_candidateId(account);
-      const candidates = await gethemContract.getApplicationsForJob(1);
-
-      setCandidates(candidates);
-    } catch (e) {
-      console.log("Couldnt't load candidates" + e);
-      setError("Couldnt't load candidates " + e.message);
-    }
-  };
 
   return (
     <div className="wrapper">
@@ -78,6 +66,7 @@ export default function JobDetails() {
             </div>
             <div className="job-details-candidates">
               <h1>Candidates</h1>
+
               <Candidates data={candidates} />
             </div>
           </div>

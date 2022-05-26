@@ -75,7 +75,9 @@
 
     }
 }
-
+.disabled-link {
+    pointer-events: none;
+  }
 .status{
     font-size: 12px;
     border-radius: 12px;

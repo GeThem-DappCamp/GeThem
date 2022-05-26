@@ -45,7 +45,7 @@ contract Candidate {
     }
 
     function isCandidate(address _candidateAddress)
-        internal
+        public
         view
         returns (bool)
     {

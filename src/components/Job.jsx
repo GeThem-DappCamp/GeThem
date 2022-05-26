@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import brickseek from "../assets/images/brickseek.png";
-import candidates from "../assets/images/candidates.svg";
+import threecandidates from "../assets/images/candidates.svg";
 import oneCandidate from "../assets/images/oneCandidate.svg";
 import twoCandidate from "../assets/images/twoCandidate.svg";
 import { useContext, useEffect, useState } from "react";
@@ -72,7 +72,7 @@ export default function Job({ data }) {
       <div className="job">
         <div className="job-logo">
           <Image
-            src={brickseek}
+            src={logo}
             alt=""
             height={78}
             width={78}
@@ -101,7 +101,7 @@ export default function Job({ data }) {
                       ? oneCandidate
                       : candidates.length == 2
                       ? twoCandidate
-                      : candidates
+                      : threecandidates
                   }
                   alt=""
                 />

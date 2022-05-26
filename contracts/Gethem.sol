@@ -193,7 +193,7 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         });
 
         Job.applications.push(newApplication);
-        uint256 applicationId = Job.applications.length - 1;
+        uint256 applicationId = Job.applications.length ;//-1
 
         candidateId_applicationIds[candidate_id].push(applicationId);
         referrerId_applicationIds[referrer_id].push(applicationId);
@@ -255,7 +255,7 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         });
 
         applications.push(newApplication);
-        uint256 applicationId = Job.applications.length - 1;
+        uint256 applicationId = Job.applications.length ;//-1
 
         candidateId_applicationIds[candidateId].push(applicationId);
         jobToApplicationCount[_jobId]++;

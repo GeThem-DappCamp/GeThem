@@ -7,11 +7,11 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { Avatar } from "@nextui-org/react";
-import { MenuItem, Select } from "@material-ui/core";
 import Alert from "react-bootstrap/Alert";
 import { Button } from "react-bootstrap";
 import { useContracts } from "../contexts";
 import { CircularProgress } from "@mui/material";
+import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -62,10 +62,14 @@ export default function Candidates({ data }) {
         parseInt(applicationId.toString()),
         jobId
       );
-      var hstatus = hiringStatus.splice();
+      var hstatus = hiringStatus;
+      // if (status == 3) {
+      //   hstatus.forEach((el, i) => {
+      //     hstatus[i] = 4; //rejected
+      //   });
+      // }
       hstatus[index] = status;
-
-      setHiringStatus([...hstatus]);
+      setHiringStatus(hstatus);
     } catch (error) {
       console.log("Couldn't update candidate status", error.message);
     }
@@ -124,10 +128,18 @@ export default function Candidates({ data }) {
               ) => (
                 <StyledTableRow key={applicationId}>
                   <StyledTableCell component="th" scope="row">
-                    <Avatar
+                    <Jazzicon
+                      className="candidate-avatar"
+                      diameter={47}
+                      seed={jsNumberForAddress(
+                        (Math.random() * 1000).toString()
+                      )}
+                    />
+
+                    {/* <Avatar
                       className="candidate-avatar"
                       src={"https://i.pravatar.cc/150?u=a042581f4e29026704d"}
-                    />
+                    /> */}
                   </StyledTableCell>
                   <StyledTableCell component="th" scope="row">
                     {candidate_name}
@@ -157,9 +169,7 @@ export default function Candidates({ data }) {
                       }}
                       class="candidate-dropdown"
                     >
-                      <option value={0} disabled={hiringStatus[index] > 0}>
-                        Pending
-                      </option>
+                      <option value={0}>Pending</option>
                       <option value={1} disabled={hiringStatus[index] > 1}>
                         Round 1
                       </option>

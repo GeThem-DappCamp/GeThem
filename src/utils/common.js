@@ -35,7 +35,7 @@ export const setupEthereumEventListeners = (ethereum) => {
   });
 
   window.ethereum.on("accountsChanged", async (accounts) => {
-    window.location.reload();
+    window.location.replace("/");
   });
 
   return ethereum;
@@ -60,7 +60,6 @@ export const getCurrentAccount = async () => {
     return null;
   }
   const account = accounts[0];
-  console.log("getCurrentAccount DONE======>", account);
 
   return account;
 };
@@ -72,4 +71,24 @@ export const getSignedContract = (address, abi) => {
 
   const signer = provider.getSigner();
   return new ethers.Contract(address, abi, signer);
+};
+
+export const getStatus = (value) => {
+  switch (value) {
+    case 0:
+      return "Waiting";
+      break;
+    case 1:
+      return "Round 1";
+      break;
+    case 2:
+      return "Round 2";
+      break;
+    case 3:
+      return "Accepted";
+      break;
+    default:
+      return "Rejected";
+      break;
+  }
 };

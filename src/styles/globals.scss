@@ -8,6 +8,7 @@
 @import "./home.scss";
 @import "./avatar.scss";
 @import "./modal.scss";
+@import "./history.scss";
 
 body{
     background-color: #0D192B !important;
@@ -135,6 +136,9 @@ ul{
 }
 p{
     margin-bottom: 0 !important;
+}
+.success-alert{
+    background-color: #ccf3ce !important;
 }
 @media (max-width:974px) {
     .wrapper-container{

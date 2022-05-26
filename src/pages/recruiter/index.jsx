@@ -34,18 +34,15 @@ export default function Recruiter() {
       const isRecruiter = await gethemContract.isRecruiter(address);
       if (isRecruiter) {
         const result = await gethemContract.getJobsByAddress(address);
-        // console.log("###### result", result);
 
         var recruiter_jobs = [];
         for (var i = 0; i < result.length; i++) {
           const job_id = parseInt(result[i]["jobId"].toString());
-          // console.log("###### job_id", job_id);
 
           const item = result[i]["jobStructure"];
           const applications = await gethemContract.getApplicationsForJob(
             job_id
           );
-          console.log("###### applications", applications);
 
           const secs = item[6].toString();
 
@@ -58,15 +55,15 @@ export default function Recruiter() {
             salary: item[4],
             type: item[5],
             time: parseInt(secs) * 1000,
-            status: item[7].toString(),
-            amount: item[8][1] ? item[8][1].toString() : "10",
+            status: item[8].toString(),
+            amount: "10",
             candidates: applications,
-            recruiter_address: item[9],
+            recruiter_address: item[7],
           });
+          // item[9][1] ? item[9][1].toString() :
         }
-        console.log("###### recruiter_jobs", recruiter_jobs);
-
         setJobs(recruiter_jobs);
+        console.log("recruiter_jobs", recruiter_jobs);
       }
     } catch (e) {
       console.log("Couldnt't load jobs" + e);
@@ -90,7 +87,6 @@ export default function Recruiter() {
     if (jobs.length == 0) {
       const isRecruiter = await gethemContract.isRecruiter(account);
       if (!isRecruiter) {
-        console.log("##### create recruiter");
         const transaction = await gethemContract.createRecruiterAccount(
           account,
           "",
@@ -116,8 +112,6 @@ export default function Recruiter() {
     amount
   ) => {
     try {
-      console.log("##### create job");
-
       setError("");
       const options = {
         value: ethers.utils.formatUnits(amount.toString(), "wei"),

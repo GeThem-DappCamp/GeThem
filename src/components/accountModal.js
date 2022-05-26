@@ -7,6 +7,7 @@ export default function AccountModal(props) {
   const [error, setError] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
 
   useEffect(() => {
     setName(props.current_name);
@@ -53,6 +54,18 @@ export default function AccountModal(props) {
             required
           />
         </Form.Group>
+        {props.showCompanyField ? (
+          <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+            <Form.Label className="jobModal-label"> Current Company</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder=""
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              required
+            />
+          </Form.Group>
+        ) : null}
 
         <Form.Group>
           <p className="jobModal-error">{error}</p>
@@ -61,7 +74,7 @@ export default function AccountModal(props) {
       <Modal.Footer>
         <Button
           onClick={() => {
-            props.onSave(name, email);
+            props.onSave(name, email, company);
           }}
           style={{
             backgroundColor: "#FF5D56",

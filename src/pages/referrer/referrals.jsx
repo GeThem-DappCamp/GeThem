@@ -95,24 +95,25 @@ export default function AllReferrals() {
       <Menu index={1} actorType="referrer" />
       <div className="wrapper-container">
         <div className="wrapper-header right">
-          <div style={{ marginRight: "60px", position: "relative" }}>
+          <div style={{ marginRight: "30px", position: "relative" }}>
             <span
               style={{
                 position: "absolute",
                 top: "-5px",
                 right: "-5px",
-                backgroundColor: "white",
+                backgroundColor: "#ff5d56",
                 borderRadius: "50%",
                 width: "20px",
                 height: "20px",
-                fontSize: "10px",
+                fontSize: "12px",
+                fontWeight: "700",
                 textAlign: "center",
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
                 zIndex: "2",
-                borderColor: "black",
+                borderColor: "white",
                 borderWidth: "1",
                 color: "black",
               }}

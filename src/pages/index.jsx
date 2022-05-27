@@ -13,19 +13,28 @@ export default function Home(props) {
   const router = useRouter();
   const [loader, setLoader] = useState(false);
 
+  useEffect(() => {
+    if (account) {
+      setLoader(false);
+    }
+  }, [account]);
+
   const connect = async (user) => {
     setLoader(true);
     try {
       await connectWallet();
-      await props.onConnect((currentAccount) => {
+      props.onConnect((currentAccount) => {
         if (currentAccount) {
+          // setLoader(false);
+
           router.push(`/${user}`);
         }
       });
     } catch (error) {
+      setLoader(false);
+
       console.log("error while connecting", error);
     }
-    setLoader(false);
   };
   return (
     <div className="users">

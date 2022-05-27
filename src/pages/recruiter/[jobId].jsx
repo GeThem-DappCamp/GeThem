@@ -42,7 +42,7 @@ export default function JobDetails() {
           <div className="wrapper-body">
             <div className="job-topBar">
               <h1>Job #{job.jobId}</h1>
-              <button>Close Job</button>
+              {/* <button>Close Job</button> */}
             </div>
             <div className="job-details">
               <p className="title">Company:</p>

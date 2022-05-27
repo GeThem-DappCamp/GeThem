@@ -242,22 +242,37 @@ contract GeThem is Job, Recruiter, Referrer, Candidate {
         string memory linkedinProfile
     ) public onlyCandidate {
         uint256 candidateId = address_candidateId[msg.sender];
-        Application memory newApplication = Application({
-            candidateId: candidateId,
-            referrerId: 0,
-            jobId: _jobId,
-            hiringStatus: HiringStatus.WAITING,
-            skillsets: skillsets,
-            currentPosition: currentPosition,
-            linkedinProfile: linkedinProfile,
-            yearsOfExperience: yearsOfExperience,
-            initTimestamp: block.timestamp
-        });
+        int index = -1;
+        for(uint256 i=0; i< Job.applications.length; i++){
+            if(Job.applications[i].jobId == _jobId &&  Job.applications[i].candidateId== candidateId){
+                index= int(i);
+                break;
+            }
+        }
+        if(index==-1){
+            Application memory newApplication = Application({
+                candidateId: candidateId,
+                referrerId: 0,
+                jobId: _jobId,
+                hiringStatus: HiringStatus.WAITING,
+                skillsets: skillsets,
+                currentPosition: currentPosition,
+                linkedinProfile: linkedinProfile,
+                yearsOfExperience: yearsOfExperience,
+                initTimestamp: block.timestamp
+            });
 
-        applications.push(newApplication);
-        uint256 applicationId = Job.applications.length ;//-1
+            applications.push(newApplication);
+            uint256 applicationId = Job.applications.length ;//-1
 
-        candidateId_applicationIds[candidateId].push(applicationId);
-        jobToApplicationCount[_jobId]++;
+            candidateId_applicationIds[candidateId].push(applicationId);
+            jobToApplicationCount[_jobId]++;
+        }else{
+            
+            applications[uint256(index)].skillsets= skillsets;
+            applications[uint256(index)].currentPosition= currentPosition;
+            applications[uint256(index)].linkedinProfile= linkedinProfile; 
+            applications[uint256(index)].yearsOfExperience= yearsOfExperience;
+        }
     }
 }

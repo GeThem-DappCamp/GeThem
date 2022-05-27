@@ -7,6 +7,7 @@ import "@typechain/hardhat";
 import "hardhat-contract-sizer";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
+import "hardhat-contract-sizer";
 
 dotenv.config();
 
@@ -51,9 +52,9 @@ const config: HardhatUserConfig = {
       chainId: 4,
     },
     rinkeby: {
-      url: process.env.ROPSTEN_URL,
+      url: process.env.RINKEBY_URL,
       accounts:
-      process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
   },
   gasReporter: {

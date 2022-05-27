@@ -194,7 +194,7 @@ export default function Recruiter() {
             <Avatar onClick={() => setAccountShow(true)} />
           </div>
           <div className="home-header">
-            <h1>Open Jobs</h1>
+            <h1>All Jobs</h1>
             <button onClick={() => setModalShow(true)}>
               <Image src={plus} alt="" height={15} width={15} />
             </button>

@@ -85,7 +85,7 @@ export default function Job({ data }) {
             <h1 className="job-title">Job #{jobId}</h1>
             <p className="job-subtitle">{name + " - " + position}</p>
             <div className="job-description">
-              <p>{salary}</p>
+              <p style={{ marginRight: "10px" }}>{salary}</p>
               <p>{type}</p>
             </div>
           </div>

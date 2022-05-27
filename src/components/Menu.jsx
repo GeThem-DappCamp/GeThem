@@ -55,10 +55,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Menu({ index }) {
+export default function Menu({ index, actorType }) {
   const classes = useStyles();
   const theme = useTheme();
   const [active, setActive] = useState(index);
+  const [actor, _setActor] = useState(actorType || "recruiter");
   const [mobileOpen, setMobileOpen] = useState(false);
   const router = useRouter();
 
@@ -70,28 +71,54 @@ export default function Menu({ index }) {
       <div className="menu-logo">
         <Image src={logo} alt="" />
       </div>
-      <ul>
-        <li
-          className={active == 0 ? "menu-item menu-active" : "menu-item"}
-          onClick={() => {
-            setActive(0);
-            router.push(`/recruiter`);
-          }}
-        >
-          <Image src={active == 0 ? homeW : home} alt="" />
-          <p>Home</p>
-        </li>
-        <li
-          className={active == 1 ? "menu-item menu-active" : "menu-item"}
-          onClick={() => {
-            setActive(1);
-            router.push(`/recruiter/referrers`);
-          }}
-        >
-          <Image src={active == 1 ? starW : star} alt="" />
-          <p>Referrers</p>
-        </li>
-      </ul>
+      {actor === "recruiter" && (
+        <ul>
+          <li
+            className={active == 0 ? "menu-item menu-active" : "menu-item"}
+            onClick={() => {
+              setActive(0);
+              router.push(`/recruiter`);
+            }}
+          >
+            <Image src={active == 0 ? homeW : home} alt="" />
+            <p>Home</p>
+          </li>
+          <li
+            className={active == 1 ? "menu-item menu-active" : "menu-item"}
+            onClick={() => {
+              setActive(1);
+              router.push(`/recruiter/referrers`);
+            }}
+          >
+            <Image src={active == 1 ? starW : star} alt="" />
+            <p>Referrers</p>
+          </li>
+        </ul>
+      )}
+      {actor === "referrer" && (
+        <ul>
+          <li
+            className={active == 0 ? "menu-item menu-active" : "menu-item"}
+            onClick={() => {
+              setActive(0);
+              router.push(`/referrer`);
+            }}
+          >
+            <Image src={active == 0 ? homeW : home} alt="" />
+            <p>Home</p>
+          </li>
+          <li
+            className={active == 1 ? "menu-item menu-active" : "menu-item"}
+            onClick={() => {
+              setActive(1);
+              router.push(`/referrer/referrals`);
+            }}
+          >
+            <Image src={active == 1 ? starW : star} alt="" />
+            <p>Referrals</p>
+          </li>
+        </ul>
+      )}
     </div>
   );
   return (

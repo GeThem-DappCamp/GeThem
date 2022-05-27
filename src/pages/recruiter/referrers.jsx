@@ -70,8 +70,7 @@ export default function TopReferrers() {
         referrer = {
           image: "",
           name: referrer[0],
-          score: Math.floor(Math.random() * 10),
-          //referrer[3].toString(),
+          score: referrer[3].toString(),
           referrals: referrer[4].toString(),
           email: referrer[1],
         };

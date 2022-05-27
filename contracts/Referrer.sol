@@ -53,13 +53,18 @@ contract Referrer {
         referrerId_address[referrerCount] = msg.sender;
     }
 
-    function editReferrer(string memory name, string memory email, string memory community_names) public onlyReferrer {
+    function editReferrer(
+        string memory name,
+        string memory email,
+        string memory community_names
+    ) public onlyReferrer {
         referrers[address_referrerId[msg.sender]].name = name;
         referrers[address_referrerId[msg.sender]].email = email;
-        referrers[address_referrerId[msg.sender]].community_names = community_names;
+        referrers[address_referrerId[msg.sender]]
+            .community_names = community_names;
     }
 
-    function isReferrer(address referrer_address) internal view returns (bool) {
+    function isReferrer(address referrer_address) public view returns (bool) {
         uint256 referrerId = address_referrerId[referrer_address];
         if (referrerId != 0 && referrers[referrerId].exist) {
             return true;

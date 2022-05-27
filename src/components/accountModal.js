@@ -8,11 +8,13 @@ export default function AccountModal(props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
+  const [community, setCommunity] = useState("");
 
   useEffect(() => {
     setName(props.current_name);
     setEmail(props.current_email);
-  }, [props.current_name, props.current_email]);
+    setCommunity(props.current_community);
+  }, [props.current_name, props.current_email, props.current_community]);
 
   return (
     <Modal
@@ -67,6 +69,19 @@ export default function AccountModal(props) {
           </Form.Group>
         ) : null}
 
+        {props.showCommunityField && (
+          <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+            <Form.Label className="jobModal-label"> Community Names</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder=""
+              value={community}
+              onChange={(e) => setCommunity(e.target.value)}
+              required
+            />
+          </Form.Group>
+        )}
+
         <Form.Group>
           <p className="jobModal-error">{error}</p>
         </Form.Group>
@@ -74,7 +89,7 @@ export default function AccountModal(props) {
       <Modal.Footer>
         <Button
           onClick={() => {
-            props.onSave(name, email, company);
+            props.onSave(name, email, company, community);
           }}
           style={{
             backgroundColor: "#FF5D56",

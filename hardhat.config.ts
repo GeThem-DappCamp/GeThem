@@ -32,18 +32,18 @@ const config: HardhatUserConfig = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 200
-          }
-        }
+            runs: 200,
+          },
+        },
       },
       {
         version: "0.8.13",
         settings: {
           optimizer: {
             enabled: true,
-            runs: 200
-          }
-        }
+            runs: 200,
+          },
+        },
       },
     ],
   },
@@ -51,11 +51,11 @@ const config: HardhatUserConfig = {
     hardhat: {
       chainId: 4,
     },
-    rinkeby: {
-      url: process.env.RINKEBY_URL,
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-    },
+    // rinkeby: {
+    //   url: process.env.RINKEBY_URL,
+    //   accounts:
+    //     process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    // },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
@@ -67,5 +67,3 @@ const config: HardhatUserConfig = {
 };
 
 export default config;
-
-

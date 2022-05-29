@@ -114,9 +114,10 @@ export default function Recruiter() {
     try {
       setError("");
       const options = {
-        value: ethers.utils.formatUnits(amount.toString(), "wei"),
+        value: ethers.utils.parseUnits(amount.toString(), "ether"),
       };
 
+      amount = ethers.utils.parseUnits(amount.toString(), "ether");
       const transaction = await gethemContract.createJobByRecruiter(
         company_name,
         logo,
